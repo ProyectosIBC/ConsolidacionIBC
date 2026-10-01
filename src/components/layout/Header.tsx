@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp, AppView } from '../../context/AppContext';
+import { IBCLogo } from '../common/IBCLogo';
 import {
   Plus,
   ExternalLink,
@@ -139,6 +140,7 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <Menu className="w-5 h-5" />
           </button>
+          <IBCLogo size="sm" className="lg:hidden" />
           <div>
             <h2 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">{current.title}</h2>
             <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{current.subtitle}</p>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
+import { IBCLogo } from '../common/IBCLogo';
 import {
   Church,
   UserPlus,
@@ -141,9 +142,7 @@ export const PublicPortalView: React.FC = () => {
     <div className="max-w-3xl mx-auto py-4 space-y-6">
       {/* Banner de Bienvenida Institucional */}
       <div className="text-center space-y-2">
-        <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white shadow-lg shadow-blue-600/20">
-          <Church className="w-8 h-8" />
-        </div>
+        <IBCLogo size="xl" showBorder className="mx-auto" />
         <h2 className="text-2xl font-black text-slate-900 tracking-tight">
           Iglesia Bautista Central de Bogotá
         </h2>

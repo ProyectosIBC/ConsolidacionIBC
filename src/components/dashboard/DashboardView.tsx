@@ -750,7 +750,7 @@ export const DashboardView: React.FC = () => {
         ) : (
           <div className="space-y-4">
             {consejeriasPendientes.map((req) => {
-              const defaultMsg = `¡Hola, ${req.nombre}! Le saluda con mucho afecto el Pastor Edgar de la Iglesia Bautista Central de Bogotá. He recibido su solicitud de consejería sobre "${req.tema}" y me gustaría hablar con usted en este momento. ¿Cómo se encuentra hoy?`;
+              const defaultMsg = `¡Hola, ${req.nombre}! Te saluda con mucho afecto el Pastor Edgar de la Iglesia Bautista Central de Bogotá. He recibido tu solicitud de consejería sobre "${req.tema}" y me gustaría hablar contigo en este momento. ¿Cómo te encuentras hoy?`;
 
               return (
                 <div

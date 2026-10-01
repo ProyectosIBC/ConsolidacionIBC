@@ -94,7 +94,7 @@ export const MinistryConsolidationView: React.FC = () => {
                   <a
                     href={generarEnlaceWhatsApp(
                       member.telefono,
-                      `¡Hola ${member.nombre}! 🙏 Le saluda el Pastor Edgar de la Iglesia Bautista Central de Bogotá. Nos alegra enormemente que hayas completado tus 13 lecciones de discipulado. Queremos invitarte a integrarte al ministerio de ${member.ministerioInteres || 'servicio'} para poner tus dones al servicio del Señor. ¿Te parece bien si conversamos este domingo?`
+                      `¡Hola, ${member.nombre}! 🙏 Te saluda con mucho afecto el Pastor Edgar de la Iglesia Bautista Central de Bogotá. Nos alegra enormemente que hayas completado tus 13 lecciones de discipulado. Queremos invitarte a integrarte al ministerio de ${member.ministerioInteres || 'servicio'} para poner tus dones al servicio del Señor. ¿Te parece bien si conversamos este domingo?`
                     )}
                     target="_blank"
                     rel="noreferrer"

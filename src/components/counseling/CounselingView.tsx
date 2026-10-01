@@ -286,7 +286,7 @@ export const CounselingView: React.FC<CounselingViewProps> = ({ onOpenNewCounsel
                     <a
                       href={generarEnlaceWhatsApp(
                         req.contacto,
-                        `¡Hola ${req.nombre}! Te saluda el Pastor Edgar de la Iglesia Bautista Central de Bogotá. He recibido tu solicitud de consejería sobre "${req.tema}" y estoy para servirte. ¿En qué momento tienes disponibilidad para que conversemos?`
+                        `¡Hola, ${req.nombre}! Te saluda con mucho afecto el Pastor Edgar de la Iglesia Bautista Central de Bogotá. He recibido tu solicitud de consejería sobre "${req.tema}" y me gustaría hablar contigo en este momento. ¿Cómo te encuentras hoy?`
                       )}
                       target="_blank"
                       rel="noreferrer"
