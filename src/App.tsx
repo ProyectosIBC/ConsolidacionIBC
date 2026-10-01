@@ -11,6 +11,8 @@ import { PublicPortalView } from './components/publicForms/PublicPortalView';
 import { DatabaseSetupView } from './components/database/DatabaseSetupView';
 import { TelegramAutomationView } from './components/telegram/TelegramAutomationView';
 import { SettingsView } from './components/settings/SettingsView';
+import { DiscipleshipView } from './components/discipleship/DiscipleshipView';
+import { MinistryConsolidationView } from './components/ministry/MinistryConsolidationView';
 import { NotificationToast } from './components/common/NotificationToast';
 import { NewMemberModal } from './components/common/NewMemberModal';
 import { NewCounselingModal } from './components/common/NewCounselingModal';
@@ -76,7 +78,8 @@ const AppContent: React.FC = () => {
             <DonationsView onOpenNewDonationModal={() => setIsDonationModalOpen(true)} />
           )}
           {currentView === 'public-portal' && <PublicPortalView />}
-          {currentView === 'database' && <DatabaseSetupView />}
+          {currentView === 'discipleship' && <DiscipleshipView />}
+          {currentView === 'ministry-consolidation' && <MinistryConsolidationView />}
           {currentView === 'telegram-automation' && <TelegramAutomationView />}
           {currentView === 'settings' && <SettingsView />}
         </main>

@@ -74,6 +74,14 @@ export const Header: React.FC<HeaderProps> = ({
       title: 'Libro Contable de Ofrendas y Diezmos',
       subtitle: 'Registro de aportes, auditoría de transferencias y visualizador de comprobantes.',
     },
+    discipleship: {
+      title: 'Discipulado: Libro Nuevos Creyentes (13 Lecciones)',
+      subtitle: 'Acompañamiento semanal virtual o presencial guiado por discipuladores.',
+    },
+    'ministry-consolidation': {
+      title: 'Consolidado Ministerial del Pastor',
+      subtitle: 'Hermanos graduados de discipulado listos para colocación en ministerios según su interés.',
+    },
     'public-portal': {
       title: 'Portal de Formularios Congregacionales',
       subtitle: 'Formularios públicos para visitantes dominicales, consejería y reporte de donaciones.',

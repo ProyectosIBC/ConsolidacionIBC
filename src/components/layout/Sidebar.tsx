@@ -18,6 +18,8 @@ import {
   UserCheck,
   Bot,
   X,
+  BookOpen,
+  Award,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -93,6 +95,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
       label: 'Ofrendas y Donaciones',
       icon: Coins,
       visible: permissions.puedeVerOfrendas,
+      section: 'main',
+    },
+    {
+      id: 'discipleship',
+      label: 'Discipulado (Nuevos Creyentes)',
+      icon: BookOpen,
+      visible: true,
+      section: 'main',
+    },
+    {
+      id: 'ministry-consolidation',
+      label: 'Consolidado Ministerial',
+      icon: Award,
+      visible: activeRole === 'pastor' || activeRole === 'desarrollador',
       section: 'main',
     },
     {

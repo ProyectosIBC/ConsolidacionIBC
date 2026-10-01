@@ -15,7 +15,7 @@ export type PaymentMethod = 'Bancolombia' | 'Nequi' | 'Daviplata' | 'Efectivo' |
 
 export type MemberType = 'Visitante Nuevo' | 'En Proceso' | 'Miembro Frecuente' | 'Ausente' | 'Integrado';
 
-export type UserRole = 'pastor' | 'consolidador' | 'desarrollador';
+export type UserRole = 'pastor' | 'consolidador' | 'discipulador' | 'desarrollador';
 
 export interface UserProfileInfo {
   id: string; // 'pastor', 'cons-1', 'cons-2', 'cons-3', 'dev'
@@ -58,6 +58,16 @@ export interface MemberRoadmapProgress {
   notas?: string;
 }
 
+export interface DiscipleshipProgress {
+  leccionActual: number; // 1 a 13 ("Nuevos Creyentes")
+  completado: boolean; // Las 13 lecciones finalizadas
+  discipuladorId?: string;
+  discipuladorNombre?: string;
+  fechaInicio?: string;
+  fechaCompletado?: string;
+  notas?: string;
+}
+
 export interface Member {
   id: string;
   nombre: string;
@@ -81,6 +91,11 @@ export interface Member {
   // Asignación de Consolidador
   consolidadorId: string;
   consolidadorNombre: string;
+
+  // Asignación de Discipulador (Libro Nuevos Creyentes - 13 Lecciones)
+  discipuladorId?: string;
+  discipuladorNombre?: string;
+  discipulado?: DiscipleshipProgress;
 
   // Bautismo y Disponibilidad
   deseaBautizarse?: 'Sí' | 'No' | 'Ya bautizado' | 'Desea información';
@@ -126,7 +141,7 @@ export interface AppLog {
   rol: UserRole;
   accion: string;
   detalle: string;
-  categoria: 'miembro' | 'consejeria' | 'ofrenda' | 'sesion' | 'sistema';
+  categoria: 'miembro' | 'consejeria' | 'ofrenda' | 'sesion' | 'sistema' | 'discipulado' | 'ministerio';
 }
 
 export interface AppNotification {

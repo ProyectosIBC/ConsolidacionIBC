@@ -44,6 +44,8 @@ export type AppView =
   | 'dashboard'
   | 'kanban'
   | 'counseling'
+  | 'discipleship'
+  | 'ministry-consolidation'
   | 'schedule'
   | 'generator'
   | 'donations'
@@ -102,6 +104,8 @@ interface AppContextType {
 
   // Roadmap actions
   advanceMemberRoadmap: (memberId: string, stepNumber?: number, notes?: string) => void;
+  updateDiscipleshipProgress: (memberId: string, leccionActual: number, completado: boolean) => void;
+  updateMinistryPlacement: (memberId: string, ministerioAsignado: string) => void;
 
   // Counseling actions
   addCounseling: (
@@ -643,6 +647,46 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
+  const updateDiscipleshipProgress = (memberId: string, leccionActual: number, completado: boolean) => {
+    setMembers((prev) =>
+      prev.map((m) => {
+        if (m.id !== memberId) return m;
+        const disc = m.discipulado || { leccionActual: 1, completado: false, discipuladorNombre: activeUserProfile.nombre };
+        const updatedDisc = {
+          ...disc,
+          leccionActual,
+          completado,
+          discipuladorId: activeUserProfile.id,
+          discipuladorNombre: activeUserProfile.nombre,
+          fechaCompletado: completado ? new Date().toISOString() : undefined,
+        };
+        addLog('Discipulado', `Actualizada lección ${leccionActual}/13 para ${m.nombre} (Libro Nuevos Creyentes)`, 'discipulado');
+        showToast('success', `Progreso de discipulado actualizado: Lección ${leccionActual}/13`, 'Discipulado Actualizado');
+        return {
+          ...m,
+          discipulado: updatedDisc,
+          pasoActualRuta: completado ? 5 : m.pasoActualRuta,
+        };
+      })
+    );
+  };
+
+  const updateMinistryPlacement = (memberId: string, ministerioAsignado: string) => {
+    setMembers((prev) =>
+      prev.map((m) => {
+        if (m.id !== memberId) return m;
+        addLog('Ministerio', `Asignado ministerio "${ministerioAsignado}" a ${m.nombre} tras completar discipulado`, 'ministerio');
+        showToast('success', `¡${m.nombre} asignado al ministerio de ${ministerioAsignado}!`, 'Colocación Ministerial');
+        return {
+          ...m,
+          ministerioInteres: ministerioAsignado,
+          pasoActualRuta: 6,
+          estadoSeguimiento: 'Integrado',
+        };
+      })
+    );
+  };
+
   const advanceMemberWeek = (id: string) => {
     setMembers((prev) =>
       prev.map((m) => {
@@ -848,6 +892,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         registerContactAttempt,
         reassignConsolidator,
         advanceMemberRoadmap,
+        updateDiscipleshipProgress,
+        updateMinistryPlacement,
         addCounseling,
         updateCounselingStatus,
         addCounselingNote,
