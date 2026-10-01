@@ -1,5 +1,6 @@
 import React from 'react';
 import { useApp, AppView } from '../../context/AppContext';
+import { IBCLogo } from '../common/IBCLogo';
 import {
   LayoutDashboard,
   KanbanSquare,
@@ -149,9 +150,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
       {/* Brand Header */}
       <div className="p-5 border-b border-slate-800 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
-            <Church className="w-6 h-6" />
-          </div>
+          <IBCLogo size="md" />
           <div>
             <h1 className="font-bold text-white text-base tracking-tight leading-tight">
               IBC Bogotá

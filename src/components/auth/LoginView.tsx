@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
+import { IBCLogo } from '../common/IBCLogo';
 import { USER_PROFILES } from '../../data/profilesData';
 import {
   Church,
@@ -61,9 +62,7 @@ export const LoginView: React.FC = () => {
       {/* Top Header bar with portal link */}
       <header className="max-w-6xl w-full mx-auto flex items-center justify-between py-2">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-blue-600/90 border border-blue-400/30 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
-            <Church className="w-5 h-5" />
-          </div>
+          <IBCLogo size="sm" />
           <div>
             <h1 className="text-sm font-bold text-white tracking-tight">IBC Bogotá</h1>
             <p className="text-[10px] text-blue-300 italic">Donde el amor hace la diferencia</p>
@@ -83,9 +82,12 @@ export const LoginView: React.FC = () => {
       <div className="max-w-4xl w-full mx-auto my-6 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         {/* Left Side: Pastoral Welcome & Verse */}
         <div className="lg:col-span-6 space-y-6 text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/60 border border-blue-700/50 text-xs text-blue-200">
-            <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-            <span>Sistema Seguro con Credenciales Asignadas</span>
+          <div className="flex items-center gap-3">
+            <IBCLogo size="xl" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/60 border border-blue-700/50 text-xs text-blue-200">
+              <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+              <span>Sistema Seguro con Credenciales Asignadas</span>
+            </div>
           </div>
 
           <div className="space-y-2">
