@@ -524,6 +524,37 @@ export const DashboardView: React.FC = () => {
           </div>
         </div>
 
+        {/* 🌟 Modo Enfoque Pastoral (Alerta de Acción Inmediata) */}
+        {(consejeriasPendientes.length > 0 || nuevos7Dias.length > 0) && (
+          <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-slate-900 rounded-3xl p-5 text-white shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0">
+                <Sparkles className="w-5 h-5 text-amber-300 animate-pulse" />
+              </div>
+              <div>
+                <h4 className="font-black text-sm text-white">Enfoque de Atención Prioritaria para Hoy</h4>
+                <p className="text-xs text-blue-100">
+                  Hay {consejeriasPendientes.filter(c => c.urgencia === 'Alta' || getTiempoAtencionStatus(c).status === 'breached').length} consejerías prioritarias y {nuevos7Dias.length} visitantes recientes esperando cuidado pastoral.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => setCurrentView('counseling')}
+                className="px-4 py-2 rounded-xl bg-white text-blue-900 font-bold text-xs hover:bg-blue-50 transition-colors shadow-xs"
+              >
+                Atender Consejerías ({consejeriasPendientes.length})
+              </button>
+              <button
+                onClick={() => setCurrentView('kanban')}
+                className="px-4 py-2 rounded-xl bg-blue-500/30 hover:bg-blue-500/40 text-white font-bold text-xs border border-blue-400/30 transition-colors"
+              >
+                Ver Consolidación
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Botón Rápido para simular / probar otros perfiles */}
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xs text-slate-400 font-bold">Probar como:</span>
