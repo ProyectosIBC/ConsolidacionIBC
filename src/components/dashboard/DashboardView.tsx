@@ -51,6 +51,54 @@ export const DashboardView: React.FC = () => {
   const [selectedMemberForModal, setSelectedMemberForModal] = useState<Member | null>(null);
   const [logFilter, setLogFilter] = useState<'todos' | 'miembro' | 'consejeria' | 'ofrenda' | 'sesion'>('todos');
 
+  // 10 Reflexiones Pastorales Institucionales de la IBC Bogotá
+  const pastoralGreetings = [
+    {
+      titulo: '1. Sentido de Familia',
+      mensaje: '«¡Bienvenido a la Iglesia Bautista Central! Nos alegra profundamente tenerte aquí; esta es una familia que te recibe con los brazos abiertos porque estamos convencidos de que el amor hace la diferencia».',
+    },
+    {
+      titulo: '2. El Taller de Pecadores',
+      mensaje: '«Quiero que sepas que no has llegado a un museo de santos perfectos, sino a un taller de pecadores en restauración, donde todos —empezando por mí— dependemos diariamente de la misericordia de Dios.»',
+    },
+    {
+      titulo: '3. Manual del Fabricante',
+      mensaje: '«En este lugar no venimos a enseñarte opiniones personales ni filosofías humanas. Aquí te saludamos abriendo la Biblia, porque es el manual que Dios nos dejó para ordenar nuestra vida y nuestro hogar.»',
+    },
+    {
+      titulo: '4. Crecimiento Espiritual Genuino',
+      mensaje: '«Nos gozamos de que estés con nosotros en este espacio para crecer espiritualmente y para que recibas un mensaje real de esperanza y salvación para tu vida».',
+    },
+    {
+      titulo: '5. Restauración de la Familia',
+      mensaje: '«Mi oración es que tu llegada a la congregación no sea una simple visita, sino que la Palabra de Dios alcance a tu cónyuge, a tus hijos y transforme tu hogar desde la raíz.»',
+    },
+    {
+      titulo: '6. Sin Fe de Fachada',
+      mensaje: '«Aquí puedes quitarte las máscaras. Dios conoce tu corazón mejor que tú mismo, así que siéntete bienvenido a buscar al Señor con total sinceridad, sin apariencias ni fe de fachada.»',
+    },
+    {
+      titulo: '7. Integración al Servicio',
+      mensaje: '«En la iglesia servimos, alabamos y proclamamos las verdades de Dios; queremos que te sientas respaldado por una comunidad que camina contigo en los momentos buenos y en las pruebas».',
+    },
+    {
+      titulo: '8. Perseverancia en la Oración',
+      mensaje: '«Te animo a conectarte no solo los domingos, sino a acompañarnos en nuestros tiempos de oración, porque una fe estable se construye buscando al Señor de manera constante».',
+    },
+    {
+      titulo: '9. Decisiones con Visión',
+      mensaje: '«Dios no te trajo aquí por casualidad. Estamos llamados a tomar decisiones espirituales sabias hoy para transformar nuestro presente e influir positivamente en el futuro de las nuevas generaciones».',
+    },
+    {
+      titulo: '10. Bendición Pastoral',
+      mensaje: '«¡Te recibimos con alegría! Créelo de corazón: Dios tiene grandes cosas preparadas para ti y para tu casa en este lugar. ¡Síentete en tu hogar!»',
+    },
+  ];
+
+  const [greetingIndex, setGreetingIndex] = useState(0);
+  const currentGreeting = pastoralGreetings[greetingIndex];
+  const nextGreeting = () => setGreetingIndex((prev) => (prev + 1) % pastoralGreetings.length);
+
   // Fechas de cálculo
   const now = new Date();
   const sieteDiasAtras = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -107,7 +155,7 @@ export const DashboardView: React.FC = () => {
     }
     if (activeProfile === 'cons-1') {
       return {
-        saludo: `¡Dios bendiga tu siembra fraterna, hermana ${currentConsolidator?.nombre || 'Martha'}!`,
+        saludo: `¡Dios bendiga tu labor ministerial, hermana ${currentConsolidator?.nombre || 'Martha'}!`,
         versiculo: '«¡Cuán hermosos son sobre los montes los pies del que trae alegres nuevas, del que anuncia la paz...!»',
         cita: 'Isaías 52:7 (RVR1960)',
         icono: '🤝',
@@ -160,8 +208,7 @@ export const DashboardView: React.FC = () => {
                 {blessing.versiculo} <span className="font-bold not-italic text-emerald-300 ml-1">({blessing.cita})</span>
               </p>
               <p className="text-xs text-slate-400 pt-0.5">
-                Rol: <strong className="text-white">{currentConsolidator?.alias}</strong> · Tienes{' '}
-                <strong className="text-emerald-400">{misAsignados.length} hermanos asignados</strong> bajo tu cuidado fraterno.
+                Rol: <strong className="text-white">{currentConsolidator?.alias}</strong> · Tienes <strong className="text-emerald-400">{misAsignados.length} hermanos asignados</strong> bajo tu cuidado ministerial.
               </p>
             </div>
           </div>
@@ -515,11 +562,23 @@ export const DashboardView: React.FC = () => {
             🕊️
           </div>
           <div className="space-y-1">
-            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              Bienvenido, Pastor Edgar
-            </h2>
-            <p className="text-sm text-slate-300">
-              Aquí tiene el resumen de su congregación y las llamadas pastorales pendientes para hoy.
+            <div className="flex items-center gap-3 flex-wrap">
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                Bienvenido, Pastor Edgar
+              </h2>
+              <button
+                onClick={nextGreeting}
+                className="px-3 py-1.5 rounded-xl bg-blue-600/30 hover:bg-blue-600/50 text-blue-200 text-xs font-bold border border-blue-400/40 transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
+                title="Cambiar reflexión pastoral institucional"
+              >
+                <span>🔄 {currentGreeting.titulo} (Ver siguiente)</span>
+              </button>
+            </div>
+            <p className="text-xs sm:text-sm text-amber-200/95 italic font-serif leading-relaxed max-w-2xl bg-slate-800/80 p-3.5 rounded-2xl border border-slate-700/80 shadow-xs">
+              {currentGreeting.mensaje}
+            </p>
+            <p className="text-xs text-slate-300 font-medium">
+              Mi resumen de congregación y llamadas pastorales pendientes para hoy.
             </p>
           </div>
         </div>
