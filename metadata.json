@@ -1,0 +1,6 @@
+{
+  "name": "IBC Bogotá - Donde el Amor Hace la Diferencia",
+  "description": "Iglesia Bautista Central de Bogotá — IBC, donde el amor hace la diferencia. Sistema de Consolidación de Miembros, Consejería con SLA, Seguimiento Semanal y Donaciones.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
