@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logoImg from '../../assets/logo_ibc.jpg';
+import logoPng from '../../assets/logo_ibc.png';
 
 interface IBCLogoProps {
   className?: string;
@@ -26,11 +26,11 @@ export const IBCLogo: React.FC<IBCLogoProps> = ({
   return (
     <div className={`relative inline-flex items-center justify-center shrink-0 ${dimensions} ${className}`}>
       <img
-        src={hasError ? '/logo_ibc.jpg' : logoImg}
+        src={hasError ? '/logo_ibc.png' : logoPng}
         alt="Logo Oficial IBC Bogotá - El Amor hace la diferencia"
         onError={() => setHasError(true)}
-        className={`w-full h-full object-contain filter drop-shadow-md rounded-xl select-none ${
-          showBorder ? 'ring-2 ring-emerald-500/40 p-1 bg-white shadow-sm' : ''
+        className={`w-full h-full object-contain filter drop-shadow-md select-none transition-transform hover:scale-105 ${
+          showBorder ? 'ring-2 ring-emerald-500/40 p-1 bg-white/10 backdrop-blur-xs rounded-2xl shadow-sm' : ''
         }`}
         loading="eager"
       />
