@@ -100,6 +100,14 @@ export const DiscipleshipView: React.FC = () => {
             const disc = member.discipulado || { leccionActual: 1, completado: false, discipuladorNombre: 'Por asignar' };
             const progressPercent = Math.round((disc.leccionActual / 13) * 100);
 
+            const getMilestoneBadge = (lec: number, done: boolean) => {
+              if (done) return { label: '🎓 Graduado IBC', color: 'bg-emerald-100 text-emerald-800' };
+              if (lec <= 4) return { label: '🌱 Semilla de Fe (1-4)', color: 'bg-lime-100 text-lime-800' };
+              if (lec <= 9) return { label: '🌿 Creciendo (5-9)', color: 'bg-teal-100 text-teal-800' };
+              return { label: '🌳 Fundamento (10-13)', color: 'bg-amber-100 text-amber-800' };
+            };
+            const milestone = getMilestoneBadge(disc.leccionActual, disc.completado);
+
             return (
               <div
                 key={member.id}
@@ -111,11 +119,14 @@ export const DiscipleshipView: React.FC = () => {
                       <h3 className="font-bold text-slate-900 text-base">{member.nombre}</h3>
                       <p className="text-xs text-slate-500 font-mono">{member.telefono}</p>
                     </div>
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${
-                      disc.completado ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
-                    }`}>
-                      {disc.completado ? 'Graduado 🎓' : `Lección ${disc.leccionActual} / 13`}
-                    </span>
+                    <div className="flex flex-col items-end gap-1">
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${milestone.color}`}>
+                        {milestone.label}
+                      </span>
+                      <span className="text-[10px] font-bold text-slate-400">
+                        Lección {disc.leccionActual} / 13
+                      </span>
+                    </div>
                   </div>
 
                   {/* Barra de Progreso 13 Lecciones */}
