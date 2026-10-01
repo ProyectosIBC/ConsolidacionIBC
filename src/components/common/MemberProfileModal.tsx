@@ -21,6 +21,7 @@ import {
   Building,
 } from 'lucide-react';
 import { generarEnlaceWhatsApp, personalizarMensaje } from '../../lib/whatsappUtils';
+import { formatColombianTime } from '../../lib/dateUtils';
 
 interface MemberProfileModalProps {
   member: Member | null;
@@ -35,6 +36,7 @@ export const MemberProfileModal: React.FC<MemberProfileModalProps> = ({ member, 
     changeMemberStatus,
     registerContactAttempt,
     config,
+    getCounselingForMember,
   } = useApp();
 
   const [stepNote, setStepNote] = useState('');
@@ -152,6 +154,85 @@ export const MemberProfileModal: React.FC<MemberProfileModalProps> = ({ member, 
 
         {/* Contenedor con Scroll de la Ruta */}
         <div className="flex-1 overflow-y-auto pr-1 space-y-6">
+          {/* SECCIÓN DE CONSEJERÍA PASTORAL CON EL PASTOR EDGAR CASTAÑO */}
+          {(() => {
+            const cInfo = getCounselingForMember(member);
+            if (!cInfo) return null;
+
+            return (
+              <div
+                className={`p-4 rounded-2xl border ${
+                  cInfo.estado === 'En acompañamiento'
+                    ? 'bg-emerald-50/70 border-emerald-300'
+                    : cInfo.estado === 'Pendiente'
+                    ? 'bg-amber-50/70 border-amber-300'
+                    : 'bg-slate-50 border-slate-200'
+                }`}
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">🕊️</span>
+                    <div>
+                      <h4 className="text-xs font-black text-slate-900 uppercase tracking-tight">
+                        Acompañamiento Pastoral — Pastor Edgar Castaño
+                      </h4>
+                      <p className="text-[11px] font-bold text-slate-600">
+                        Asunto: <span className="text-slate-900">{cInfo.tema}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <span
+                    className={`self-start sm:self-auto px-3 py-1 rounded-xl text-xs font-black ${
+                      cInfo.estado === 'En acompañamiento'
+                        ? 'bg-emerald-200 text-emerald-900'
+                        : cInfo.estado === 'Pendiente'
+                        ? 'bg-amber-200 text-amber-900'
+                        : 'bg-slate-200 text-slate-700'
+                    }`}
+                  >
+                    {cInfo.estado === 'En acompañamiento'
+                      ? '✅ ATENDIDA POR EL PASTOR'
+                      : cInfo.estado === 'Pendiente'
+                      ? '⏳ EN ESPERA DE LLAMADA'
+                      : 'FINALIZADA'}
+                  </span>
+                </div>
+
+                {cInfo.estado === 'En acompañamiento' ? (
+                  <div className="bg-white p-3.5 rounded-xl border border-emerald-200/80 space-y-1.5 text-xs text-slate-700">
+                    <div className="flex items-center gap-2 text-emerald-800 font-extrabold">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      <span>El Pastor Edgar Castaño ya se comunicó personalmente con este hermano.</span>
+                    </div>
+                    {cInfo.fechaAtencion && (
+                      <p className="text-[11px] text-slate-500 font-medium">
+                        Fecha y hora de atención: {formatColombianTime(cInfo.fechaAtencion)}
+                      </p>
+                    )}
+                    <div className="p-2.5 bg-emerald-50/60 rounded-lg text-[11px] text-emerald-950 font-medium border border-emerald-100">
+                      💡 <strong>Pauta para el consolidador:</strong> El hermano ya se encuentra en acompañamiento pastoral. Puedes continuar tu llamada o mensaje de seguimiento semanal con total tranquilidad, enfocándote en orar por él y animarlo en su asistencia dominical, sin indagar en temas íntimos tratados con el Pastor.
+                    </div>
+                  </div>
+                ) : cInfo.estado === 'Pendiente' ? (
+                  <div className="bg-white p-3.5 rounded-xl border border-amber-200/80 space-y-1.5 text-xs text-slate-700">
+                    <div className="flex items-center gap-2 text-amber-800 font-extrabold">
+                      <Clock className="w-4 h-4 text-amber-600 animate-pulse" />
+                      <span>Solicitud de consejería en cola prioritaria de atención pastoral.</span>
+                    </div>
+                    <p className="text-[11px] text-slate-600">
+                      Disponibilidad preferida del hermano:{' '}
+                      <strong className="text-slate-800">{cInfo.disponibilidadHorario || 'Cualquier horario'}</strong>.
+                    </p>
+                    <div className="p-2.5 bg-amber-50/60 rounded-lg text-[11px] text-amber-950 font-medium border border-amber-100">
+                      💡 <strong>Pauta para el consolidador:</strong> El Pastor Edgar Castaño tiene programada la llamada pastoral. Si hablas con el hermano, recuérdale con amor que el pastor se estará comunicando con él en el horario que solicitó.
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            );
+          })()}
+
           {/* TÍTULO DE LA RUTA */}
           <div>
             <div className="flex items-center justify-between">

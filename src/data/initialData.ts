@@ -170,7 +170,7 @@ export const INITIAL_MEMBERS: Member[] = [
     ],
   },
   {
-    id: 'mem-005',
+    id: 'mem-010',
     nombre: 'Mauricio Alejandro Silva',
     telefono: '573007623190',
     email: 'mauricio.silva.arq@gmail.com',
@@ -181,8 +181,9 @@ export const INITIAL_MEMBERS: Member[] = [
     ciclosContacto: 5,
     ultimoContacto: daysAgo(1),
     proximoContacto: daysAhead(3),
-    notas: 'Solicitó consejería espiritual y familiar. En acompañamiento activo con el Pastor Edgar.',
+    notas: 'Solicitó consejería espiritual y familiar (Duelo). Atendida por el Pastor Edgar Castaño.',
     ministerioInteres: 'Hombres de Valor',
+    solicitoConsejeria: true,
     consolidadorId: 'cons-2',
     consolidadorNombre: 'Andrés Felipe Pardo (Consolidador 2)',
     pasoActualRuta: 4,
@@ -190,7 +191,30 @@ export const INITIAL_MEMBERS: Member[] = [
       { paso: 1, completado: true, fechaCompletado: daysAgo(35) },
       { paso: 2, completado: true, fechaCompletado: daysAgo(28) },
       { paso: 3, completado: true, fechaCompletado: daysAgo(20) },
-      { paso: 4, completado: false, notas: 'En discipulado y consejería pastoral.' }
+      { paso: 4, completado: false, notas: 'En discipulado y consejería pastoral activa con Pastor Edgar.' }
+    ],
+  },
+  {
+    id: 'mem-009',
+    nombre: 'Rosa Elena Gómez',
+    telefono: '573187654321',
+    email: 'rosita.gomez@gmail.com',
+    fechaRegistro: daysAgo(10),
+    tipo: 'Visitante Nuevo',
+    estadoSeguimiento: 'Consejería activa',
+    semanaActual: 2,
+    ciclosContacto: 1,
+    ultimoContacto: daysAgo(2),
+    proximoContacto: daysAhead(1),
+    notas: 'Solicitó consejería urgente por Crisis Matrimonial y Familiar con el Pastor Edgar.',
+    ministerioInteres: 'Matrimonios / Familia',
+    solicitoConsejeria: true,
+    consolidadorId: 'cons-1',
+    consolidadorNombre: 'Martha Cecilia Gómez (Consolidador 1)',
+    pasoActualRuta: 2,
+    historialRuta: [
+      { paso: 1, completado: true, fechaCompletado: daysAgo(10) },
+      { paso: 2, completado: false, notas: 'Esperando llamada de consejería del Pastor Edgar.' }
     ],
   },
   {

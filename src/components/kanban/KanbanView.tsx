@@ -10,6 +10,7 @@ import {
   Calendar,
   AlertTriangle,
   CheckCircle2,
+  Clock,
   Search,
   Filter,
   Car,
@@ -69,6 +70,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({ onOpenNewMemberModal }) 
     config,
     activeProfile,
     currentConsolidator,
+    getCounselingForMember,
   } = useApp();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -312,6 +314,50 @@ export const KanbanView: React.FC<KanbanViewProps> = ({ onOpenNewMemberModal }) 
                             <span>Requiere Transporte</span>
                           </div>
                         )}
+
+                        {/* Insignia de Estado de Consejería Pastoral con Pastor Edgar */}
+                        {(() => {
+                          const cInfo = getCounselingForMember(member);
+                          if (!cInfo) return null;
+                          return (
+                            <div
+                              className={`mt-2 p-2 rounded-xl border text-[10px] leading-tight space-y-1 ${
+                                cInfo.estado === 'En acompañamiento'
+                                  ? 'bg-emerald-50/90 border-emerald-300 text-emerald-950'
+                                  : cInfo.estado === 'Pendiente'
+                                  ? 'bg-amber-50/90 border-amber-300 text-amber-950'
+                                  : 'bg-slate-50 border-slate-200 text-slate-700'
+                              }`}
+                            >
+                              <div className="flex items-center gap-1.5 font-extrabold">
+                                {cInfo.estado === 'En acompañamiento' ? (
+                                  <>
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                    <span className="text-emerald-800">✅ Atendida por Pastor Edgar</span>
+                                  </>
+                                ) : cInfo.estado === 'Pendiente' ? (
+                                  <>
+                                    <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0 animate-pulse" />
+                                    <span className="text-amber-800">🕊️ En espera de llamada pastoral</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                                    <span className="text-slate-700">Consejería culminada</span>
+                                  </>
+                                )}
+                              </div>
+                              <div className="text-[9.5px] text-slate-600">
+                                <span className="font-semibold">Tema:</span> {cInfo.tema}
+                              </div>
+                              {cInfo.estado === 'En acompañamiento' && (
+                                <div className="text-[9px] text-emerald-700 font-semibold flex items-center gap-1">
+                                  <span>📞 Pastor ya en acompañamiento activo</span>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })()}
 
                         {/* Botón Ver Ruta Completa & Expediente */}
                         <button

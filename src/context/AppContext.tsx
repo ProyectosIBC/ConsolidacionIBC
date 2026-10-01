@@ -139,6 +139,7 @@ interface AppContextType {
     percentage: number;
     label: string;
   };
+  getCounselingForMember: (member: Member | { nombre: string; telefono?: string; email?: string }) => CounselingRequest | undefined;
   // Logs de actividad
   logs: AppLog[];
   addLog: (accion: string, detalle: string, categoria?: AppLog['categoria']) => void;
@@ -787,17 +788,71 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
+  const getCounselingForMember = (m: Member | { nombre: string; telefono?: string; email?: string }): CounselingRequest | undefined => {
+    if (!m || !m.nombre) return undefined;
+    const normName = m.nombre.toLowerCase().trim();
+    const phoneClean = (m.telefono || '').replace(/\D/g, '').slice(-7);
+
+    return counseling.find((c) => {
+      const cName = c.nombre.toLowerCase().trim();
+      if (cName === normName) return true;
+      if (cName.includes(normName) || normName.includes(cName)) return true;
+      if (phoneClean && c.contacto && c.contacto.replace(/\D/g, '').includes(phoneClean)) return true;
+      if (m.email && c.email && m.email.toLowerCase().trim() === c.email.toLowerCase().trim()) return true;
+      return false;
+    });
+  };
+
   const updateCounselingStatus = (id: string, status: CounselingStatus) => {
+    const targetReq = counseling.find((c) => c.id === id);
+
     setCounseling((prev) =>
       prev.map((c) => {
         if (c.id !== id) return c;
         return {
           ...c,
           estado: status,
-          fechaAtencion: status === 'En acompañamiento' && !c.fechaAtencion ? new Date().toISOString() : c.fechaAtencion,
+          fechaAtencion: (status === 'En acompañamiento' || status === 'Cerrada') && !c.fechaAtencion ? new Date().toISOString() : c.fechaAtencion,
         };
       })
     );
+
+    // Notificar al consolidador asignado del hermano
+    if (targetReq) {
+      const matchedMember = members.find((m) => {
+        const normM = m.nombre.toLowerCase().trim();
+        const normC = targetReq.nombre.toLowerCase().trim();
+        return normM === normC || (targetReq.contacto && m.telefono && m.telefono.includes(targetReq.contacto.slice(-7)));
+      });
+
+      if (matchedMember) {
+        const labelStatus = status === 'En acompañamiento' 
+          ? 'Atendida — En Acompañamiento' 
+          : status === 'Cerrada' 
+          ? 'Finalizada con éxito' 
+          : 'En espera';
+
+        addNotification({
+          destinatarioPerfilId: matchedMember.consolidadorId,
+          remitenteNombre: 'Pastor Edgar Castaño',
+          titulo: `🕊️ Consejería Atendida: ${matchedMember.nombre}`,
+          mensaje: `El Pastor Edgar Castaño ha atendido la consejería de ${matchedMember.nombre} sobre "${targetReq.tema}". Estado actual: ${labelStatus}. Ya puedes continuar con tu seguimiento fraterno.`,
+          tipo: 'consejeria',
+          telefono: matchedMember.telefono,
+          accionTexto: 'Ver Expediente',
+          accionTipo: 'ver_miembros',
+        });
+
+        // Asegurar que el miembro esté clasificado adecuadamente
+        if (status === 'En acompañamiento' && matchedMember.estadoSeguimiento !== 'Consejería activa') {
+          updateMember(matchedMember.id, {
+            estadoSeguimiento: 'Consejería activa',
+            solicitoConsejeria: true,
+          });
+        }
+      }
+    }
+
     showToast('info', `Estado de consejería actualizado a "${status}"`, 'Consejería');
   };
 
@@ -909,6 +964,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         removeToast,
         sendTelegramAlert,
         getTiempoAtencionStatus,
+        getCounselingForMember,
         logs,
         addLog,
         notifications,
