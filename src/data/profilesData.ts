@@ -5,7 +5,7 @@ export const USER_PROFILES: UserProfileInfo[] = [
     id: 'pastor',
     username: 'pastor.edgar',
     password: 'Pastor2026*',
-    nombre: 'Pastor Edgar',
+    nombre: 'Pastor Edgar Castaño',
     email: 'pastor.edgar@ibcbogota.org',
     rol: 'pastor',
     rolLabel: 'Pastor Principal',

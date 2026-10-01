@@ -2,7 +2,7 @@ import { Member, CounselingRequest, Donation, SystemConfig, AppLog, AppNotificat
 
 export const INITIAL_CONFIG: SystemConfig = {
   nombreIglesia: 'Iglesia Bautista Central',
-  pastorNombre: 'Pastor Edgar',
+  pastorNombre: 'Pastor Edgar Castaño',
   pastorEmail: 'dcrobles23@gmail.com',
   encargadoEmail: 'dcrobles23@gmail.com',
   numeroIglesia: '573195335076',

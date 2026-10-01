@@ -16,6 +16,7 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import { generarEnlaceWhatsApp } from '../../lib/whatsappUtils';
+import { generarMensajePastoralCounseling } from '../../lib/pastoralCounselingMessages';
 
 interface CounselingViewProps {
   onOpenNewCounselingModal: () => void;
@@ -280,20 +281,31 @@ export const CounselingView: React.FC<CounselingViewProps> = ({ onOpenNewCounsel
 
               {/* Botones de Acción */}
               <div className="mt-4 pt-3 border-t border-slate-100 space-y-2">
+                {/* Vista previa del mensaje pastoral personalizado */}
+                <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-[11px] text-slate-600 leading-relaxed">
+                  <div className="flex items-center gap-1 font-bold text-slate-700 mb-0.5">
+                    <MessageCircle className="w-3 h-3 text-emerald-600" />
+                    <span>Mensaje WhatsApp personalizado:</span>
+                  </div>
+                  <p className="italic font-serif line-clamp-2">
+                    «{generarMensajePastoralCounseling(req.nombre, req.tema, req.detalles, req.disponibilidadHorario)}»
+                  </p>
+                </div>
+
                 <div className="flex items-center gap-2">
                   {/* WhatsApp */}
                   {req.contacto && (
                     <a
                       href={generarEnlaceWhatsApp(
                         req.contacto,
-                        `¡Hola, ${req.nombre}! Te saluda con mucho afecto el Pastor Edgar de la Iglesia Bautista Central de Bogotá. He recibido tu solicitud de consejería sobre "${req.tema}" y me gustaría hablar contigo en este momento. ¿Cómo te encuentras hoy?`
+                        generarMensajePastoralCounseling(req.nombre, req.tema, req.detalles, req.disponibilidadHorario)
                       )}
                       target="_blank"
                       rel="noreferrer"
                       className="flex-1 py-1.5 px-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
                     >
                       <MessageCircle className="w-3.5 h-3.5" />
-                      <span>WhatsApp</span>
+                      <span>Contactar por WhatsApp</span>
                     </a>
                   )}
 

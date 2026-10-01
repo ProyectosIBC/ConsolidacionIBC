@@ -163,7 +163,7 @@ export const Header: React.FC<HeaderProps> = ({
                 className="text-xs font-bold py-1 px-2.5 rounded-lg bg-white border border-amber-200 text-amber-900 shadow-2xs focus:outline-none cursor-pointer max-w-[180px] sm:max-w-none"
               >
                 <optgroup label="🕊️ Liderazgo Pastoral">
-                  <option value="pastor">Pastor Edgar (Pastor Principal)</option>
+                  <option value="pastor">Pastor Edgar Castaño (Pastor Principal)</option>
                 </optgroup>
                 <optgroup label="🤝 Equipo de Consolidadores">
                   <option value="cons-1">Martha Cecilia Gómez (Consolidador 1)</option>

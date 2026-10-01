@@ -28,6 +28,7 @@ import {
   Filter,
 } from 'lucide-react';
 import { formatearMonedaCOP, generarEnlaceWhatsApp } from '../../lib/whatsappUtils';
+import { generarMensajePastoralCounseling } from '../../lib/pastoralCounselingMessages';
 import { MemberProfileModal } from '../common/MemberProfileModal';
 import { ROADMAP_STEPS } from '../../data/roadmapData';
 
@@ -750,7 +751,7 @@ export const DashboardView: React.FC = () => {
         ) : (
           <div className="space-y-4">
             {consejeriasPendientes.map((req) => {
-              const defaultMsg = `¡Hola, ${req.nombre}! Te saluda con mucho afecto el Pastor Edgar de la Iglesia Bautista Central de Bogotá. He recibido tu solicitud de consejería sobre "${req.tema}" y me gustaría hablar contigo en este momento. ¿Cómo te encuentras hoy?`;
+              const defaultMsg = generarMensajePastoralCounseling(req.nombre, req.tema, req.detalles, req.disponibilidadHorario);
 
               return (
                 <div
@@ -789,6 +790,15 @@ export const DashboardView: React.FC = () => {
                         <strong className="text-slate-800">Nota del hermano:</strong> {req.detalles}
                       </p>
                     )}
+
+                    {/* Mensaje Pastoral Preparado para WhatsApp */}
+                    <div className="mt-2.5 p-3.5 bg-emerald-50/80 border border-emerald-200/80 rounded-2xl text-xs text-slate-800 leading-relaxed space-y-1">
+                      <div className="flex items-center gap-1.5 font-bold text-emerald-800 text-[11px] uppercase tracking-wider">
+                        <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Mensaje Pastoral Preparado (Pastor Edgar Castaño):</span>
+                      </div>
+                      <p className="italic font-serif text-slate-700">«{defaultMsg}»</p>
+                    </div>
                   </div>
 
                   {/* BOTONES DE LLAMADA GRANDES Y CLAROS */}
