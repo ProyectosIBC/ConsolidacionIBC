@@ -148,6 +148,8 @@ interface AppContextType {
   showToast: (type: 'success' | 'warning' | 'error' | 'info', message: string, title?: string) => void;
   removeToast: (id: string) => void;
   sendTelegramAlert: (text: string) => Promise<boolean>;
+  testTelegramConnection: (tokenOverride?: string) => Promise<{ success: boolean; botName?: string; username?: string; message: string }>;
+  triggerWeeklyDispatchNow: () => Promise<{ success: boolean; message: string; telegramDelivered: boolean }>;
   triggerTestAlert: (type: 'semanal' | 'ausencia' | 'proxima_clase' | 'graduacion' | 'consejeria_sla' | 'decision_salvacion') => Promise<{ success: boolean; message: string }>;
   scheduleAllProcessesForNextWeek: () => {
     scheduledCount: number;
@@ -960,6 +962,104 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
+  // Verificador en vivo de la conexión con el Bot de Telegram
+  const testTelegramConnection = async (tokenOverride?: string): Promise<{ success: boolean; botName?: string; username?: string; message: string }> => {
+    const token = (tokenOverride !== undefined ? tokenOverride : config.telegramToken || '').trim();
+    if (!token) {
+      return { success: false, message: 'Falta el Token del Bot de Telegram. Obtenlo en @BotFather con el comando /token.' };
+    }
+    try {
+      const res = await fetch(`https://api.telegram.org/bot${token}/getMe`);
+      const data = await res.json().catch(() => null);
+      if (data && data.ok && data.result) {
+        return {
+          success: true,
+          botName: data.result.first_name,
+          username: data.result.username,
+          message: `Conexión exitosa con el Bot @${data.result.username} (${data.result.first_name}).`,
+        };
+      }
+      return {
+        success: false,
+        message: data?.description || 'Token inválido o no reconocido por Telegram.',
+      };
+    } catch (err: any) {
+      return {
+        success: false,
+        message: err?.message || 'Error de conexión con la API de Telegram.',
+      };
+    }
+  };
+
+  // Disparar Resumen Semanal Oficial para la semana actual
+  const triggerWeeklyDispatchNow = async (): Promise<{ success: boolean; message: string; telegramDelivered: boolean }> => {
+    const nowStr = new Date().toLocaleDateString('es-CO', { dateStyle: 'full' });
+    const activeFollowUps = members.filter((m) => m.estadoSeguimiento === 'En seguimiento').length;
+    const counselingPending = counseling.filter((c) => c.estado === 'Pendiente' || c.estado === 'En acompañamiento').length;
+    const counselingHighPriority = counseling.filter((c) => (c.estado === 'Pendiente' || c.estado === 'En acompañamiento') && c.urgencia === 'Alta').length;
+    const activeDisciples = members.filter((m) => m.discipulado && m.discipulado.leccionActual <= 13).length;
+
+    const telegramMsg = `📊 <b>RESUMEN SEMANAL OFICIAL — IBC BOGOTÁ</b>\n` +
+      `📅 <i>${nowStr}</i>\n\n` +
+      `✨ <b>Hermanos en Consolidación:</b> ${activeFollowUps} almas en ruta formativa activa de 8 semanas\n` +
+      `🙏 <b>Consejerías Pastorales:</b> ${counselingPending} citas activas (${counselingHighPriority} de alta urgencia)\n` +
+      `📖 <b>Discipulado Nuevos Creyentes:</b> ${activeDisciples} hermanos en formación doctrinal (13 lecciones)\n\n` +
+      `👥 <b>Consolidadores Asignados:</b>\n` +
+      `• Martha Cecilia Gómez (Consolidador 1)\n` +
+      `• Andrés Felipe Pardo (Consolidador 2)\n` +
+      `• Viviana Torres Mora (Consolidador 3)\n\n` +
+      `📖 <i>«Así que, hermanos míos amados, estad firmes y constantes, creciendo en la obra del Señor siempre, sabiendo que vuestro trabajo en el Señor no es en vano.» — 1 Corintios 15:58</i>`;
+
+    addNotification({
+      destinatarioPerfilId: 'todos',
+      remitenteNombre: 'Cronograma Semanal',
+      titulo: '📊 Resumen Semanal Emitido',
+      mensaje: `Resumen de consolidación: ${activeFollowUps} almas en seguimiento, ${counselingPending} consejerías agendadas y ${activeDisciples} discípulos activos.`,
+      tipo: 'sistema',
+      accionTexto: 'Ver Consolidación',
+      accionTipo: 'ver_miembros',
+    });
+
+    addLog('Cronograma Semanal', `Resumen semanal oficial emitido: ${activeFollowUps} personas en seguimiento y ${counselingPending} consejerías`, 'sistema');
+
+    if (!config.telegramToken || !config.telegramChatId) {
+      showToast('warning', 'Resumen guardado en la campanita, pero Telegram no tiene Bot Token configurado', 'Token Requerido');
+      return {
+        success: true,
+        telegramDelivered: false,
+        message: 'Resumen generado y guardado en el buzón interno (campanita 🔔). Para recibirlo en tu Telegram personal o grupal, ingresa el Bot Token en Configuración de Alertas.',
+      };
+    }
+
+    const res = await enviarNotificacionTelegram(config.telegramToken, config.telegramChatId, telegramMsg);
+    if (res.success) {
+      showToast('success', '¡Resumen semanal enviado a Telegram exitosamente!', 'Telegram Entregado');
+      return { success: true, telegramDelivered: true, message: '¡Resumen semanal oficial entregado con éxito a Telegram!' };
+    } else {
+      showToast('error', `Error al enviar a Telegram: ${res.message}`, 'Telegram Error');
+      return { success: false, telegramDelivered: false, message: `Error de Telegram: ${res.message}` };
+    }
+  };
+
+  // Verificación y emisión automática cuando hoy es día programado de alerta
+  useEffect(() => {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0 Dom, 1 Lun, 2 Mar, 3 Mié, 4 Jue, 5 Vie, 6 Sáb
+    const alertDays = Array.isArray(config.diasEnvioAlertasSemanales) ? config.diasEnvioAlertasSemanales : [1, 4];
+
+    if (alertDays.includes(dayOfWeek) && config.telegramToken && config.telegramChatId) {
+      const todayKey = `ibc_auto_alert_${today.toISOString().slice(0, 10)}`;
+      const alreadySentToday = localStorage.getItem(todayKey);
+      if (!alreadySentToday) {
+        triggerWeeklyDispatchNow().then((res) => {
+          if (res.telegramDelivered) {
+            localStorage.setItem(todayKey, 'true');
+          }
+        });
+      }
+    }
+  }, [config.telegramToken, config.telegramChatId, config.diasEnvioAlertasSemanales]);
+
   const scheduleAllProcessesForNextWeek = () => {
     const weekRange = getNextWeekRange();
     const alertDays = Array.isArray(config.diasEnvioAlertasSemanales) && config.diasEnvioAlertasSemanales.length > 0
@@ -1411,6 +1511,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         showToast,
         removeToast,
         sendTelegramAlert,
+        testTelegramConnection,
+        triggerWeeklyDispatchNow,
         triggerTestAlert,
         scheduleAllProcessesForNextWeek,
         getTiempoAtencionStatus,

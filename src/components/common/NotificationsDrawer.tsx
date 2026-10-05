@@ -384,10 +384,18 @@ export const NotificationsDrawer: React.FC<NotificationsDrawerProps> = ({ isOpen
         </div>
 
         {/* Footer del Drawer */}
-        <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
-          <p className="text-[11px] text-slate-500 font-medium">
-            Notificaciones sincronizadas con Telegram & CRM
-          </p>
+        <div className="p-4 border-t border-slate-200 bg-slate-50 flex flex-wrap items-center justify-between gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              setCurrentView('alerts-config');
+              onClose();
+            }}
+            className="text-[11px] font-bold text-sky-700 hover:text-sky-900 flex items-center gap-1.5 transition-colors cursor-pointer"
+          >
+            <Bell className="w-3.5 h-3.5" />
+            <span>Configurar Alertas & Telegram</span>
+          </button>
           <button
             onClick={onClose}
             className="px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 cursor-pointer"
