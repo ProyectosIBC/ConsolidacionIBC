@@ -598,18 +598,26 @@ export const DashboardView: React.FC = () => {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-2 shrink-0 flex-wrap">
               <button
-                onClick={() => setCurrentView('counseling')}
-                className="px-4 py-2 rounded-xl bg-white text-blue-900 font-bold text-xs hover:bg-blue-50 transition-colors shadow-xs"
+                onClick={() => setCurrentView('counseling-calendar')}
+                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
               >
-                Atender Consejerías ({consejeriasPendientes.length})
+                <CalendarCheck className="w-3.5 h-3.5" />
+                <span>Calendario Pastoral</span>
               </button>
               <button
-                onClick={() => setCurrentView('kanban')}
-                className="px-4 py-2 rounded-xl bg-blue-500/30 hover:bg-blue-500/40 text-white font-bold text-xs border border-blue-400/30 transition-colors"
+                onClick={() => setCurrentView('consolidators')}
+                className="px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs border border-white/30 transition-colors flex items-center gap-1.5 cursor-pointer"
               >
-                Ver Consolidación
+                <Users className="w-3.5 h-3.5" />
+                <span>Equipo Consolidadores</span>
+              </button>
+              <button
+                onClick={() => setCurrentView('counseling')}
+                className="px-4 py-2 rounded-xl bg-white text-blue-900 font-bold text-xs hover:bg-blue-50 transition-colors shadow-xs cursor-pointer"
+              >
+                Atender ({consejeriasPendientes.length})
               </button>
             </div>
           </div>

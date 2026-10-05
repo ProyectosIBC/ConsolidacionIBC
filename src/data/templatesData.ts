@@ -151,7 +151,7 @@ export const TEMPLATES_DATA: TemplateMessage[] = [
     categoria: 'semanal_8_semanas',
     canal: 'WhatsApp',
     cuerpo: '¡Hola [Nombre]! Esperamos que estés muy bien. ¿Te gustaría recibir el devocional semanal o participar en algún grupo de la iglesia? Cuéntanos y te ayudamos.',
-    descripcion: 'Conexión a comunidades de estudio bíblico o células.'
+    descripcion: 'Conexión a comunidades de estudio bíblico o grupos de fraternidad.'
   },
   {
     id: 'ciclo-sem-4',

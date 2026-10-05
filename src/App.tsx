@@ -13,6 +13,9 @@ import { TelegramAutomationView } from './components/telegram/TelegramAutomation
 import { SettingsView } from './components/settings/SettingsView';
 import { DiscipleshipView } from './components/discipleship/DiscipleshipView';
 import { MinistryConsolidationView } from './components/ministry/MinistryConsolidationView';
+import { ConsolidatorsView } from './components/consolidators/ConsolidatorsView';
+import { CounselingCalendarView } from './components/counseling/CounselingCalendarView';
+import { AlertsConfigView } from './components/alerts/AlertsConfigView';
 import { NotificationToast } from './components/common/NotificationToast';
 import { NewMemberModal } from './components/common/NewMemberModal';
 import { NewCounselingModal } from './components/common/NewCounselingModal';
@@ -70,8 +73,12 @@ const AppContent: React.FC = () => {
           {currentView === 'kanban' && (
             <KanbanView onOpenNewMemberModal={() => setIsMemberModalOpen(true)} />
           )}
+          {currentView === 'consolidators' && <ConsolidatorsView />}
           {currentView === 'counseling' && (
             <CounselingView onOpenNewCounselingModal={() => setIsCounselingModalOpen(true)} />
+          )}
+          {currentView === 'counseling-calendar' && (
+            <CounselingCalendarView onOpenNewCounselingModal={() => setIsCounselingModalOpen(true)} />
           )}
           {(currentView === 'schedule' || currentView === 'generator') && <ScheduleView />}
           {currentView === 'donations' && (
@@ -81,6 +88,7 @@ const AppContent: React.FC = () => {
           {currentView === 'discipleship' && <DiscipleshipView />}
           {currentView === 'ministry-consolidation' && <MinistryConsolidationView />}
           {currentView === 'telegram-automation' && <TelegramAutomationView />}
+          {currentView === 'alerts-config' && <AlertsConfigView />}
           {currentView === 'settings' && <SettingsView />}
         </main>
       </div>

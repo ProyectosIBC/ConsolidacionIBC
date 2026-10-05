@@ -227,6 +227,40 @@ async function startServer() {
     }
   });
 
+  // 3. Webhook / Public API for ibcbogota.com Counseling & Contact submissions
+  app.post('/api/external/counseling', async (req, res) => {
+    try {
+      const { nombre, contacto, email, tema, detalles, urgencia, disponibilidadHorario } = req.body;
+      if (!nombre || !contacto || !tema) {
+        return res.status(400).json({ success: false, error: 'Faltan campos obligatorios (nombre, contacto, tema)' });
+      }
+
+      const notificationText = `🚨 <b>NUEVA SOLICITUD DE CONSEJERÍA DESDE WEB (ibcbogota.com)</b>\n\n` +
+        `👤 <b>Nombre:</b> ${nombre}\n` +
+        `📞 <b>Contacto:</b> <code>${contacto}</code>\n` +
+        `✉️ <b>Email:</b> ${email || 'No proporcionado'}\n` +
+        `📋 <b>Tema:</b> ${tema}\n` +
+        `📝 <b>Detalle:</b> ${detalles || 'Sin detalles adicionales'}\n` +
+        `⚡ <b>Urgencia:</b> ${urgencia || 'Media'}\n` +
+        `🕒 <b>Disponibilidad:</b> ${disponibilidadHorario || 'Cualquier horario'}\n\n` +
+        `<i>Enviado desde el formulario público de la web oficial ibcbogota.com.</i>`;
+
+      const token = process.env.TELEGRAM_BOT_TOKEN || req.body.token;
+      const chatId = process.env.TELEGRAM_CHAT_ID || req.body.chatId;
+      if (token && chatId) {
+        await sendTelegramMessage(token, chatId, notificationText);
+      }
+
+      res.json({
+        success: true,
+        message: 'Solicitud de consejería recibida e integrada correctamente desde ibcbogota.com',
+        receivedData: { nombre, contacto, tema, fecha: new Date().toISOString() }
+      });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error.message || 'Error interno al procesar consejería externa' });
+    }
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({

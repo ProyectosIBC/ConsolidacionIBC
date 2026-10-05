@@ -58,6 +58,24 @@ export interface MemberRoadmapProgress {
   notas?: string;
 }
 
+export type CivilStatus = 'Casado/a' | 'Soltero/a' | 'Otro';
+export type AttendanceCondition = 
+  | 'Soy nuevo/a aquí' 
+  | 'Estoy de visita en la ciudad' 
+  | 'Hace tiempo que no venía' 
+  | 'Asisto regularmente a la iglesia';
+
+export interface DiscipleshipLesson {
+  numero: number;
+  titulo: string;
+  citaBiblica: string;
+  objetivo: string;
+  resumen: string;
+  puntosClave: string[];
+  aplicacionPractica: string;
+  mensajeWhatsApp: string;
+}
+
 export interface DiscipleshipProgress {
   leccionActual: number; // 1 a 13 ("Nuevos Creyentes")
   completado: boolean; // Las 13 lecciones finalizadas
@@ -66,6 +84,19 @@ export interface DiscipleshipProgress {
   fechaInicio?: string;
   fechaCompletado?: string;
   notas?: string;
+  // Gestión de clases y ausencias
+  proximaClaseFecha?: string; // ISO o YYYY-MM-DDTHH:mm
+  proximaClaseHora?: string; // e.g. "07:00 PM"
+  proximaClaseModalidad?: 'Presencial (Templo Cra 7 # 31a-78)' | 'Virtual (Google Meet / Zoom)';
+  inasistenciasConsecutivas?: number;
+  totalInasistencias?: number;
+  historialInasistencias?: {
+    fecha: string;
+    motivo?: string;
+    notificado: boolean;
+  }[];
+  notificadoPastorGraduacion?: boolean;
+  fechaNotificacionPastor?: string;
 }
 
 export interface Member {
@@ -105,6 +136,17 @@ export interface Member {
   // Ruta de Crecimiento & Servicio (Pasos 1 a 6)
   pasoActualRuta: number; // 1 = Bienvenida, 2 = Conexión, 3 = Grupo Pequeño, 4 = Discipulado, 5 = Membresía, 6 = Servicio Activo
   historialRuta: MemberRoadmapProgress[];
+
+  // Campos Oficiales de la «TARJETA DE CONEXIÓN» (IBC Bogotá)
+  fechaNacimiento?: string; // DD/MM/AAAA
+  direccionBarrioCiudad?: string;
+  estadoCivil?: CivilStatus;
+  condicionAsistencia?: AttendanceCondition;
+  decidioEntregarVidaAJesus?: boolean; // ⭐ Casilla estelar destacada en la tarjeta física
+  interesBautismo?: boolean;
+  interesConsejeria?: boolean;
+  interesServirVoluntario?: boolean;
+  ministerioDeseado?: string;
 }
 
 export interface CounselingNote {
@@ -132,6 +174,12 @@ export interface CounselingRequest {
   fechaEscalado?: string;
   fechaAtencion?: string;
   notas: CounselingNote[];
+  // Cronograma y citas pastoral
+  fechaCitaAgendada?: string; // ISO o YYYY-MM-DDTHH:mm
+  fechaCita?: string; // YYYY-MM-DD
+  horaCita?: string; // e.g. "03:00 PM"
+  lugarModalidad?: string;
+  modalidadCita?: 'Presencial (Oficina Pastoral Cra 7 # 31a-78)' | 'Llamada Telefónica' | 'Videollamada';
 }
 
 export interface AppLog {
@@ -200,5 +248,24 @@ export interface SystemConfig {
     Alta: number;
     Media: number;
     Baja: number;
+  };
+  // Datos oficiales de la Tarjeta Institucional
+  direccionIglesia: string; // Carrera 7 # 31a - 78, Bogotá
+  telefonoFijoIglesia: string; // 34 01 229
+  whatsappOficialIglesia: string; // 316 331 7875
+  sitioWebIglesia: string; // www.igbautistabog.org
+  lemaIglesia: string; // Creyentes Sanos para una Iglesia Saludable
+  // Configuración de Envío de Alertas y Notificaciones
+  diasEnvioAlertasSemanales: number[]; // [1, 4] = Lunes y Jueves
+  horaEnvioAlertas: string; // "08:00"
+  diasConsejeriaPastoral: number[]; // [2, 4] = Martes y Jueves
+  franjasHorariasConsejeria: string[]; // ["2:00 PM - 3:00 PM", "3:00 PM - 4:00 PM", "4:00 PM - 5:00 PM", "5:00 PM - 6:00 PM"]
+  alertasActivas: {
+    alertasSemanalesConsolidacion: boolean;
+    alertasAusenciasDiscipulado: boolean;
+    recordatoriosProximaClaseDiscipulado: boolean;
+    alertasGraduacionDiscipuladoPastor: boolean;
+    alertasConsejeriaSLA: boolean;
+    alertasNuevasDecisionesSalvacion: boolean;
   };
 }

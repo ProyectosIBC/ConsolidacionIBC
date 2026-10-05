@@ -21,6 +21,9 @@ import {
   X,
   BookOpen,
   Award,
+  BellRing,
+  Users,
+  Calendar,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -61,7 +64,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
   }[] = [
     {
       id: 'dashboard',
-      label: activeRole === 'pastor' ? 'Resumen Gerencial' : activeRole === 'desarrollador' ? 'Panel de Control' : 'Mi Resumen Fraterno',
+      label: activeRole === 'pastor' ? 'Resumen Gerencial' : activeRole === 'desarrollador' ? 'Panel de Control' : 'Mi Resumen',
       icon: LayoutDashboard,
       visible: true,
       section: 'main',
@@ -76,11 +79,29 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
       section: 'main',
     },
     {
+      id: 'consolidators',
+      label: 'Equipo de Consolidadores',
+      icon: Users,
+      badge: 3,
+      badgeColor: 'bg-blue-600 text-white',
+      visible: true,
+      section: 'main',
+    },
+    {
       id: 'counseling',
       label: 'Consejería Pastoral',
       icon: HeartHandshake,
       badge: urgentCounselingCount > 0 ? urgentCounselingCount : undefined,
       badgeColor: 'bg-rose-500 text-white',
+      visible: permissions.puedeGestionarConsejeria || activeRole === 'pastor' || activeRole === 'desarrollador',
+      section: 'main',
+    },
+    {
+      id: 'counseling-calendar',
+      label: 'Calendario de Consejerías',
+      icon: Calendar,
+      badge: counseling.filter((c) => c.fechaCitaAgendada && c.estado !== 'Cerrada').length || undefined,
+      badgeColor: 'bg-rose-600 text-white',
       visible: permissions.puedeGestionarConsejeria || activeRole === 'pastor' || activeRole === 'desarrollador',
       section: 'main',
     },
@@ -131,6 +152,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
       label: 'Automatización Telegram',
       icon: Bot,
       visible: activeRole === 'pastor' || activeRole === 'desarrollador',
+      section: 'system',
+    },
+    {
+      id: 'alerts-config',
+      label: 'Configuración de Alertas',
+      icon: BellRing,
+      visible: true,
       section: 'system',
     },
     {

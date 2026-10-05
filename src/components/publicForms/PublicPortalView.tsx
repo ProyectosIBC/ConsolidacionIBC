@@ -10,24 +10,58 @@ import {
   CheckCircle2,
   Clock,
   Sparkles,
+  CalendarDays,
 } from 'lucide-react';
-import { DonationCategory, PaymentMethod } from '../../types';
+import { DonationCategory, PaymentMethod, CivilStatus, AttendanceCondition, MemberType } from '../../types';
+
+function getUpcomingDayDate(targetDayOfWeek: number): string { // 2 = Tue, 4 = Thu
+  const d = new Date();
+  const diff = (targetDayOfWeek + 7 - d.getDay()) % 7;
+  const target = new Date(d.getFullYear(), d.getMonth(), d.getDate() + (diff === 0 ? 7 : diff));
+  return `${target.getFullYear()}-${String(target.getMonth() + 1).padStart(2, '0')}-${String(target.getDate()).padStart(2, '0')}`;
+}
+
+function formatShortDate(dateStr: string): string {
+  if (!dateStr) return '';
+  const parts = dateStr.split('-');
+  if (parts.length < 3) return dateStr;
+  return `${parts[2]}/${parts[1]}`;
+}
 
 export const PublicPortalView: React.FC = () => {
   const { addMember, addCounseling, addDonation, setCurrentView } = useApp();
   const [activeForm, setActiveForm] = useState<'registro' | 'consejeria' | 'ofrenda'>('registro');
   const [submittedSuccess, setSubmittedSuccess] = useState<string | null>(null);
 
-  // Estados Formulario 1: Registro
+  const hoyStr = new Date().toISOString().split('T')[0];
+  const proximoMartes = getUpcomingDayDate(2);
+  const proximoJueves = getUpcomingDayDate(4);
+
+  // Estados Formulario 1: Tarjeta Oficial de Conexión
   const [regNombre, setRegNombre] = useState('');
+  const [regFechaNacimiento, setRegFechaNacimiento] = useState('');
+  const [regDireccionBarrioCiudad, setRegDireccionBarrioCiudad] = useState('');
   const [regTelefono, setRegTelefono] = useState('');
   const [regEmail, setRegEmail] = useState('');
+  const [regEstadoCivil, setRegEstadoCivil] = useState<CivilStatus>('Soltero/a');
+  const [regCondicionAsistencia, setRegCondicionAsistencia] = useState<AttendanceCondition>('Soy nuevo/a aquí');
+  const [regDecidioEntregarVidaAJesus, setRegDecidioEntregarVidaAJesus] = useState(false);
   const [regMinisterio, setRegMinisterio] = useState('Matrimonios / Familia');
+  const [regInteresServirVoluntario, setRegInteresServirVoluntario] = useState(false);
   const [regTransporte, setRegTransporte] = useState(false);
   const [regNotas, setRegNotas] = useState('');
   const [regBautismo, setRegBautismo] = useState<'Sí' | 'No' | 'Ya bautizado' | 'Desea información'>('Desea información');
   const [regSolicitaConsejeria, setRegSolicitaConsejeria] = useState(false);
   const [regDisponibilidad, setRegDisponibilidad] = useState<'Mañana' | 'Tarde' | 'Noche'>('Mañana');
+
+  // Agenda con Calendario en Ficha de Conexión
+  const [regConsejeriaFecha, setRegConsejeriaFecha] = useState(proximoMartes);
+  const [regConsejeriaHora, setRegConsejeriaHora] = useState('15:00');
+  const [regConsejeriaModalidad, setRegConsejeriaModalidad] = useState<
+    'Presencial (Oficina Pastoral Cra 7 # 31a-78)' | 'Llamada Telefónica' | 'Videollamada'
+  >('Presencial (Oficina Pastoral Cra 7 # 31a-78)');
+  const [regConsejeriaTema, setRegConsejeriaTema] = useState('Orientación Pastoral & Acompañamiento');
+  const [regConsejeriaDetalles, setRegConsejeriaDetalles] = useState('');
 
   // Estados Formulario 2: Consejería
   const [conNombre, setConNombre] = useState('');
@@ -49,19 +83,35 @@ export const PublicPortalView: React.FC = () => {
     e.preventDefault();
     if (!regNombre.trim() || !regTelefono.trim()) return;
 
+    let memberType: MemberType = 'Visitante Nuevo';
+    if (regCondicionAsistencia === 'Asisto regularmente a la iglesia') {
+      memberType = 'Miembro Frecuente';
+    } else if (regCondicionAsistencia === 'Hace tiempo que no venía') {
+      memberType = 'Ausente';
+    }
+
     addMember({
       nombre: regNombre.trim(),
       telefono: regTelefono.trim(),
       email: regEmail.trim(),
-      tipo: 'Visitante Nuevo',
+      tipo: memberType,
       estadoSeguimiento: 'Nuevo',
       proximoContacto: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-      notas: regNotas.trim() || 'Registrado mediante la tarjeta de bienvenida virtual dominical.',
+      notas: regNotas.trim() || 'Registrado mediante la Tarjeta de Conexión oficial de IBC Bogotá.',
       ministerioInteres: regMinisterio,
       necesitaTransporte: regTransporte,
       deseaBautizarse: regBautismo,
       disponibilidadContacto: regDisponibilidad,
       solicitoConsejeria: regSolicitaConsejeria,
+      fechaNacimiento: regFechaNacimiento.trim(),
+      direccionBarrioCiudad: regDireccionBarrioCiudad.trim(),
+      estadoCivil: regEstadoCivil,
+      condicionAsistencia: regCondicionAsistencia,
+      decidioEntregarVidaAJesus: regDecidioEntregarVidaAJesus,
+      interesBautismo: regBautismo === 'Sí',
+      interesConsejeria: regSolicitaConsejeria,
+      interesServirVoluntario: regInteresServirVoluntario,
+      ministerioDeseado: regMinisterio,
     });
 
     // Si solicitó consejería directamente en la tarjeta de bienvenida
@@ -70,23 +120,39 @@ export const PublicPortalView: React.FC = () => {
         nombre: regNombre.trim(),
         contacto: regTelefono.trim(),
         email: regEmail.trim() || undefined,
-        tema: 'Acompañamiento Pastoral (Tarjeta de Bienvenida)',
+        tema: regConsejeriaTema || 'Acompañamiento Pastoral (Tarjeta de Conexión)',
         urgencia: 'Media',
-        disponibilidadHorario: regDisponibilidad,
-        detalles: regNotas.trim() || 'Solicitó consejería directamente en la tarjeta de bienvenida dominical.',
-        estado: 'Pendiente',
-        pastorAsignado: 'Pastor Edgar',
+        disponibilidadHorario: regConsejeriaHora < '13:00' ? 'Mañana' : 'Tarde',
+        modalidadCita: regConsejeriaModalidad,
+        fechaCitaAgendada: `${regConsejeriaFecha}T${regConsejeriaHora}:00`,
+        detalles: regConsejeriaDetalles || regNotas.trim() || 'Solicitó consejería directamente desde la Tarjeta de Conexión dominical.',
+        estado: 'En acompañamiento',
       });
     }
 
-    setSubmittedSuccess(
-      regSolicitaConsejeria
-        ? '¡Bienvenido(a) a la Iglesia Bautista Central! Tu registro y solicitud de llamada con el Pastor Edgar han sido recibidos. Te contactará en el horario seleccionado.'
-        : '¡Bienvenido(a) a la Iglesia Bautista Central! Tu registro ha sido recibido. El equipo pastoral te contactará muy pronto.'
-    );
+    if (regDecidioEntregarVidaAJesus) {
+      setSubmittedSuccess(
+        '⭐ ¡GLORIA A DIOS! Celebramos con inmensa alegría en el cielo y en la tierra tu decisión de entregar tu vida a Jesús. Bienvenido a la familia de la fe en la Iglesia Bautista Central de Bogotá. El Pastor Edgar Castaño y el equipo pastoral te contactarán con mucho amor para acompañarte en tus primeros pasos.'
+      );
+    } else if (regSolicitaConsejeria) {
+      setSubmittedSuccess(
+        `¡Bienvenido(a) a la Iglesia Bautista Central! Tu Tarjeta de Conexión ha sido recibida con gozo. Tu cita de consejería pastoral con el Pastor Edgar Castaño ha quedado agendada en el calendario para el ${regConsejeriaFecha} a las ${regConsejeriaHora} (${regConsejeriaModalidad}). ¡Dios bendiga tu vida!`
+      );
+    } else {
+      setSubmittedSuccess(
+        '¡Bienvenido(a) a la Iglesia Bautista Central! Tu Tarjeta de Conexión ha sido recibida con éxito. El equipo pastoral te contactará muy pronto.'
+      );
+    }
+
     setRegNombre('');
+    setRegFechaNacimiento('');
+    setRegDireccionBarrioCiudad('');
     setRegTelefono('');
     setRegEmail('');
+    setRegEstadoCivil('Soltero/a');
+    setRegCondicionAsistencia('Soy nuevo/a aquí');
+    setRegDecidioEntregarVidaAJesus(false);
+    setRegInteresServirVoluntario(false);
     setRegNotas('');
     setRegSolicitaConsejeria(false);
   };
@@ -224,59 +290,191 @@ export const PublicPortalView: React.FC = () => {
         </div>
       )}
 
-      {/* FORMULARIO 1: REGISTRO DE VISITANTE CON BAUTISMO Y CONSEJERÍA INTEGRADA */}
+      {/* FORMULARIO 1: TARJETA DE CONEXIÓN OFICIAL (DOMINGO) */}
       {activeForm === 'registro' && (
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 space-y-4">
-          <div className="pb-3 border-b border-slate-100">
-            <h3 className="text-base font-extrabold text-slate-900">
-              Tarjeta de Bienvenida y Registro (Domingo)
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 sm:p-8 space-y-5">
+          <div className="pb-4 border-b border-slate-100 space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-black uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
+                IBC Bogotá • Tarjeta de Conexión Oficial
+              </span>
+            </div>
+            <h3 className="text-lg font-black text-slate-900 tracking-tight">
+              BIENVENIDO esta es tu casa
             </h3>
-            <p className="text-xs text-slate-500">
-              ¡Qué bendición tenerte en casa! Queremos conocerte y acompañarte.
+            <p className="text-xs text-slate-500 italic">
+              «Jehová te bendiga, y te guarde; Jehová haga resplandecer su rostro sobre ti, y tenga de ti misericordia; Jehová alce sobre ti su rostro, y ponga en ti paz.» — Números 6:24-26
             </p>
           </div>
 
           <form onSubmit={handleSubmitRegistro} className="space-y-4">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                Nombre Completo: *
-              </label>
-              <input
-                type="text"
-                required
-                value={regNombre}
-                onChange={(e) => setRegNombre(e.target.value)}
-                placeholder="Ej: Daniel Camilo Robles"
-                className="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
+            {/* Nombre y Fecha de Nacimiento */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="sm:col-span-2">
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Teléfono / WhatsApp de Contacto: *
+                  NOMBRE COMPLETO: *
                 </label>
                 <input
                   type="text"
                   required
-                  value={regTelefono}
-                  onChange={(e) => setRegTelefono(e.target.value)}
-                  placeholder="Ej: 3195335076"
-                  className="w-full text-xs p-3 rounded-xl border border-slate-200 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                  value={regNombre}
+                  onChange={(e) => setRegNombre(e.target.value)}
+                  placeholder="Ej: Daniel Camilo Robles"
+                  className="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Correo Electrónico (Opcional):
+                  FECHA DE NACIMIENTO:
+                </label>
+                <input
+                  type="text"
+                  value={regFechaNacimiento}
+                  onChange={(e) => setRegFechaNacimiento(e.target.value)}
+                  placeholder="Día/Mes/Año"
+                  className="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+                />
+              </div>
+            </div>
+
+            {/* Dirección / Barrio / Ciudad */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                DIRECCIÓN / BARRIO / CIUDAD:
+              </label>
+              <input
+                type="text"
+                value={regDireccionBarrioCiudad}
+                onChange={(e) => setRegDireccionBarrioCiudad(e.target.value)}
+                placeholder="Ej: Carrera 7 # 31a - 78, Chapinero, Bogotá"
+                className="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+              />
+            </div>
+
+            {/* Teléfono y Correo */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  WHATSAPP / TELÉFONO: *
+                </label>
+                <input
+                  type="tel"
+                  required
+                  value={regTelefono}
+                  onChange={(e) => setRegTelefono(e.target.value)}
+                  placeholder="Ej: 3163317875"
+                  className="w-full text-xs p-3 rounded-xl border border-slate-200 font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  CORREO ELECTRÓNICO (OPCIONAL):
                 </label>
                 <input
                   type="email"
                   value={regEmail}
                   onChange={(e) => setRegEmail(e.target.value)}
                   placeholder="nombre@gmail.com"
-                  className="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                  className="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                 />
+              </div>
+            </div>
+
+            {/* ESTADO CIVIL */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                ESTADO CIVIL:
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {(['CASADO/A', 'SOLTERO/A', 'OTRO'] as const).map((est) => {
+                  const mapVal: CivilStatus =
+                    est === 'CASADO/A' ? 'Casado/a' : est === 'SOLTERO/A' ? 'Soltero/a' : 'Otro';
+                  const isSelected = regEstadoCivil === mapVal;
+                  return (
+                    <button
+                      key={est}
+                      type="button"
+                      onClick={() => setRegEstadoCivil(mapVal)}
+                      className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                        isSelected
+                          ? 'bg-slate-900 border-slate-900 text-white shadow-2xs'
+                          : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      <span>{est}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* CONDICIÓN DE ASISTENCIA */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                ¿CÓMO NOS VISITAS HOY?
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {[
+                  'Soy nuevo/a aquí',
+                  'Estoy de visita en la ciudad',
+                  'Hace tiempo que no venía',
+                  'Asisto regularmente a la iglesia',
+                ].map((cond) => {
+                  const isSelected = regCondicionAsistencia === cond;
+                  return (
+                    <button
+                      key={cond}
+                      type="button"
+                      onClick={() => setRegCondicionAsistencia(cond as AttendanceCondition)}
+                      className={`p-2.5 rounded-xl border text-xs font-semibold text-left transition-all flex items-center gap-2 cursor-pointer ${
+                        isSelected
+                          ? 'bg-blue-50 border-blue-400 text-blue-900 font-bold'
+                          : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                      }`}
+                    >
+                      <span
+                        className={`w-4 h-4 rounded-md border flex items-center justify-center shrink-0 ${
+                          isSelected ? 'bg-blue-600 border-blue-600 text-white' : 'border-slate-300 bg-white'
+                        }`}
+                      >
+                        {isSelected && '✓'}
+                      </span>
+                      <span className="text-[11px]">{cond}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* ⭐ CASILLA ESTELAR: HOY DECIDÍ ENTREGAR MI VIDA A JESÚS */}
+            <div
+              onClick={() => setRegDecidioEntregarVidaAJesus(!regDecidioEntregarVidaAJesus)}
+              className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center gap-3.5 select-none ${
+                regDecidioEntregarVidaAJesus
+                  ? 'bg-emerald-600 text-white border-emerald-700 shadow-md ring-4 ring-emerald-500/20'
+                  : 'bg-emerald-50/70 border-emerald-300 text-emerald-950 hover:bg-emerald-100/60'
+              }`}
+            >
+              <span
+                className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center font-bold text-sm shrink-0 ${
+                  regDecidioEntregarVidaAJesus ? 'bg-white text-emerald-700 border-white' : 'border-emerald-500 bg-white'
+                }`}
+              >
+                {regDecidioEntregarVidaAJesus ? '✓' : ''}
+              </span>
+              <div className="flex-1">
+                <span className="font-black text-sm uppercase tracking-wide block">
+                  ⭐ HOY DECIDÍ ENTREGAR MI VIDA A JESÚS
+                </span>
+                <span
+                  className={`text-[11px] block mt-0.5 ${
+                    regDecidioEntregarVidaAJesus ? 'text-emerald-100' : 'text-emerald-800'
+                  }`}
+                >
+                  Marca esta casilla si hoy tomaste tu decisión de fe o reconciliación con Cristo.
+                </span>
               </div>
             </div>
 
@@ -332,44 +530,138 @@ export const PublicPortalView: React.FC = () => {
               </div>
 
               {regSolicitaConsejeria && (
-                <div className="pl-6 pt-1 space-y-2 animate-in fade-in-50">
-                  <label className="block text-xs font-bold text-slate-700">
-                    ¿En qué horario tienes disponibilidad para hablar con el Pastor?
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setRegDisponibilidad('Mañana')}
-                      className={`p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                        regDisponibilidad === 'Mañana'
-                          ? 'bg-rose-600 text-white border-rose-600 shadow-2xs'
-                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                      }`}
-                    >
-                      🌅 Mañana
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setRegDisponibilidad('Tarde')}
-                      className={`p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                        regDisponibilidad === 'Tarde'
-                          ? 'bg-rose-600 text-white border-rose-600 shadow-2xs'
-                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                      }`}
-                    >
-                      ☀️ Tarde
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setRegDisponibilidad('Noche')}
-                      className={`p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                        regDisponibilidad === 'Noche'
-                          ? 'bg-rose-600 text-white border-rose-600 shadow-2xs'
-                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                      }`}
-                    >
-                      🌙 Noche
-                    </button>
+                <div className="pt-2 space-y-3.5 animate-in fade-in-50 bg-white/70 p-3.5 rounded-2xl border border-rose-200">
+                  <div className="flex items-center justify-between pb-1.5 border-b border-rose-100">
+                    <span className="text-[11px] font-black text-rose-950 uppercase tracking-wide flex items-center gap-1.5">
+                      <CalendarDays className="w-3.5 h-3.5 text-rose-600" />
+                      <span>Agendar Cita en Calendario Pastoral</span>
+                    </span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-800">
+                      Pastor Edgar Castaño
+                    </span>
+                  </div>
+
+                  <p className="text-[11px] text-rose-900/90 leading-relaxed">
+                    Atención presencial en templo: <strong>Martes y Jueves (2:00 PM a 6:00 PM)</strong> en Cra 7 # 31a - 78, o modalidad telefónica / videollamada.
+                  </p>
+
+                  {/* Selección de Fecha */}
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                      Elige el día para tu cita pastoral:
+                    </label>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setRegConsejeriaFecha(proximoMartes)}
+                        className={`p-2 rounded-xl border text-xs font-bold transition-all text-center cursor-pointer ${
+                          regConsejeriaFecha === proximoMartes
+                            ? 'bg-rose-600 text-white border-rose-600 shadow-2xs'
+                            : 'bg-white text-slate-700 border-rose-200 hover:bg-rose-50'
+                        }`}
+                      >
+                        <span>Martes {formatShortDate(proximoMartes)}</span>
+                        <span className="block text-[9px] font-normal opacity-90">⭐ Día Pastoral</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setRegConsejeriaFecha(proximoJueves)}
+                        className={`p-2 rounded-xl border text-xs font-bold transition-all text-center cursor-pointer ${
+                          regConsejeriaFecha === proximoJueves
+                            ? 'bg-rose-600 text-white border-rose-600 shadow-2xs'
+                            : 'bg-white text-slate-700 border-rose-200 hover:bg-rose-50'
+                        }`}
+                      >
+                        <span>Jueves {formatShortDate(proximoJueves)}</span>
+                        <span className="block text-[9px] font-normal opacity-90">⭐ Día Pastoral</span>
+                      </button>
+
+                      <div className="col-span-2 sm:col-span-1">
+                        <input
+                          type="date"
+                          value={regConsejeriaFecha}
+                          min={hoyStr}
+                          onChange={(e) => setRegConsejeriaFecha(e.target.value)}
+                          className="w-full text-xs p-2 rounded-xl border border-rose-200 bg-white font-medium text-slate-800 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Franja Horaria */}
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                      Franja horaria:
+                    </label>
+                    <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5">
+                      {['14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30'].map((time) => {
+                        const label = time.replace('14:', '02:').replace('15:', '03:').replace('16:', '04:').replace('17:', '05:') + ' PM';
+                        const isSelected = regConsejeriaHora === time;
+                        return (
+                          <button
+                            key={time}
+                            type="button"
+                            onClick={() => setRegConsejeriaHora(time)}
+                            className={`py-1.5 px-1 rounded-lg text-[10px] font-black transition-all cursor-pointer text-center ${
+                              isSelected
+                                ? 'bg-rose-600 text-white shadow-2xs'
+                                : 'bg-white text-slate-700 border border-rose-200 hover:bg-rose-50'
+                            }`}
+                          >
+                            {label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Modalidad y Tema */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                        Modalidad:
+                      </label>
+                      <select
+                        value={regConsejeriaModalidad}
+                        onChange={(e) => setRegConsejeriaModalidad(e.target.value as any)}
+                        className="w-full text-xs p-2 rounded-xl border border-rose-200 bg-white font-medium text-slate-800"
+                      >
+                        <option value="Presencial (Oficina Pastoral Cra 7 # 31a-78)">
+                          Presencial (Sede Cra 7 # 31a-78)
+                        </option>
+                        <option value="Llamada Telefónica">Llamada Telefónica</option>
+                        <option value="Videollamada">Videollamada (Meet / Zoom)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                        Motivo / Necesidad Espiritual:
+                      </label>
+                      <select
+                        value={regConsejeriaTema}
+                        onChange={(e) => setRegConsejeriaTema(e.target.value)}
+                        className="w-full text-xs p-2 rounded-xl border border-rose-200 bg-white font-medium text-slate-800"
+                      >
+                        <option value="Orientación Pastoral & Acompañamiento">Orientación Pastoral General</option>
+                        <option value="Crisis Matrimonial / Familiar">Crisis Matrimonial / Familiar</option>
+                        <option value="Duelo / Crisis Emocional">Duelo / Crisis Emocional</option>
+                        <option value="Crecimiento Espiritual / Dudas">Crecimiento Espiritual / Dudas</option>
+                        <option value="Petición de Oración Especial">Petición de Oración Especial</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Detalle o Petición */}
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Detalle confidencial para el Pastor Edgar (opcional)..."
+                      value={regConsejeriaDetalles}
+                      onChange={(e) => setRegConsejeriaDetalles(e.target.value)}
+                      className="w-full text-xs p-2.5 rounded-xl border border-rose-200 bg-white text-slate-800 placeholder:text-slate-400"
+                    />
                   </div>
                 </div>
               )}

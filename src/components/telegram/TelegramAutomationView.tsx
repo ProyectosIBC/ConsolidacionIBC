@@ -270,7 +270,7 @@ export const TelegramAutomationView: React.FC = () => {
 
   const sendSampleWelcomeAlert = async () => {
     setSendingWeekly('welcome_alert');
-    const msg = `🆕 <b>NUEVA TARJETA DE BIENVENIDA DOMINICAL RECIBIDA</b>\n\n👤 <b>Nombre:</b> Carlos Andrés Mendoza\n📞 <b>WhatsApp:</b> <code>310 554 2318</code>\n🌊 <b>¿Desea bautizarse?:</b> ¡SÍ, desea dar el paso de fe del bautismo!\n🤝 <b>Consolidador Asignado:</b> Martha Cecilia Gómez (Consolidador 1)\n🏛️ <b>Área de Interés:</b> Matrimonios / Células de Hogar\n🙏 <b>Petición de Oración:</b> Por la salud de mi madre y la bendición de nuestro nuevo hogar en Bogotá.\n\n<i>Expediente creado en el sistema de consolidación y ruta de 6 pasos iniciada automáticamente.</i>`;
+    const msg = `🆕 <b>NUEVA TARJETA DE BIENVENIDA DOMINICAL RECIBIDA</b>\n\n👤 <b>Nombre:</b> Carlos Andrés Mendoza\n📞 <b>WhatsApp:</b> <code>310 554 2318</code>\n🌊 <b>¿Desea bautizarse?:</b> ¡SÍ, desea dar el paso de fe del bautismo!\n🤝 <b>Consolidador Asignado:</b> Martha Cecilia Gómez (Consolidador 1)\n🏛️ <b>Área de Interés:</b> Matrimonios y Familias\n🙏 <b>Petición de Oración:</b> Por la salud de mi madre y la bendición de nuestro nuevo hogar en Bogotá.\n\n<i>Expediente creado en el sistema de consolidación y ruta de 6 pasos iniciada automáticamente.</i>`;
     const res = await enviarNotificacionTelegram(config.telegramToken, testChatId || config.telegramChatId, msg);
     setSendingWeekly(null);
     if (res.success) {

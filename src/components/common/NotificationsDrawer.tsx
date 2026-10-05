@@ -16,6 +16,7 @@ import {
   X,
   Mail,
   Users,
+  Calendar,
 } from 'lucide-react';
 import { generarEnlaceWhatsApp } from '../../lib/whatsappUtils';
 import { AppNotification } from '../../types';
@@ -38,7 +39,7 @@ export const NotificationsDrawer: React.FC<NotificationsDrawerProps> = ({ isOpen
     setCurrentView,
   } = useApp();
 
-  const [filterTab, setFilterTab] = useState<'todas' | 'no_leidas' | 'mensajes'>('todas');
+  const [filterTab, setFilterTab] = useState<'todas' | 'no_leidas' | 'proxima_semana' | 'mensajes'>('todas');
   const [isComposing, setIsComposing] = useState(false);
   const [destinatarioId, setDestinatarioId] = useState('pastor');
   const [mensajeTitulo, setMensajeTitulo] = useState('');
@@ -53,10 +54,16 @@ export const NotificationsDrawer: React.FC<NotificationsDrawerProps> = ({ isOpen
 
   const unreadCount = myNotifications.filter((n) => !n.leida).length;
   const teamMessagesCount = myNotifications.filter((n) => n.tipo === 'mensaje_equipo').length;
+  const nextWeekCount = myNotifications.filter(
+    (n) => n.id.startsWith('sched-') || n.titulo.includes('Programado') || n.titulo.includes('Próxima Semana')
+  ).length;
 
   const filtered = myNotifications.filter((n) => {
     if (filterTab === 'no_leidas') return !n.leida;
     if (filterTab === 'mensajes') return n.tipo === 'mensaje_equipo';
+    if (filterTab === 'proxima_semana') {
+      return n.id.startsWith('sched-') || n.titulo.includes('Programado') || n.titulo.includes('Próxima Semana');
+    }
     return true;
   });
 
@@ -133,10 +140,10 @@ export const NotificationsDrawer: React.FC<NotificationsDrawerProps> = ({ isOpen
           </div>
 
           {/* Tabs de Filtro */}
-          <div className="grid grid-cols-3 gap-1 bg-slate-200/70 p-1 rounded-xl text-xs font-bold">
+          <div className="grid grid-cols-4 gap-1 bg-slate-200/70 p-1 rounded-xl text-[11px] font-bold">
             <button
               onClick={() => setFilterTab('todas')}
-              className={`py-1.5 rounded-lg transition-all cursor-pointer ${
+              className={`py-1.5 rounded-lg transition-all cursor-pointer text-center ${
                 filterTab === 'todas' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600'
               }`}
             >
@@ -144,19 +151,27 @@ export const NotificationsDrawer: React.FC<NotificationsDrawerProps> = ({ isOpen
             </button>
             <button
               onClick={() => setFilterTab('no_leidas')}
-              className={`py-1.5 rounded-lg transition-all cursor-pointer ${
+              className={`py-1.5 rounded-lg transition-all cursor-pointer text-center ${
                 filterTab === 'no_leidas' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600'
               }`}
             >
               No leídas ({unreadCount})
             </button>
             <button
+              onClick={() => setFilterTab('proxima_semana')}
+              className={`py-1.5 rounded-lg transition-all cursor-pointer text-center ${
+                filterTab === 'proxima_semana' ? 'bg-white text-indigo-900 shadow-2xs' : 'text-slate-600'
+              }`}
+            >
+              Próx. Sem. ({nextWeekCount})
+            </button>
+            <button
               onClick={() => setFilterTab('mensajes')}
-              className={`py-1.5 rounded-lg transition-all cursor-pointer ${
+              className={`py-1.5 rounded-lg transition-all cursor-pointer text-center ${
                 filterTab === 'mensajes' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600'
               }`}
             >
-              Mensajes ({teamMessagesCount})
+              Equipo ({teamMessagesCount})
             </button>
           </div>
         </div>

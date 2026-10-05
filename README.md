@@ -17,7 +17,29 @@
 
 ## 🚀 Novedades y Capacidades Recientes
 
-### 1. 🔔 Buzón de Notificaciones y Mensajería Interna en la App (Multi-Perfil)
+### 1. 📅 Calendario Mensual Interactivo de Consejería Pastoral
+* **Agenda mensual completa para el Pastor Edgar:** Visualización clara de todos los días del mes con navegación fluida.
+* **Días de atención en templo resaltados:** Martes y Jueves (2:00 PM a 6:00 PM) en la Sede Pastoral (Carrera 7 # 31a - 78).
+* **Agendamiento con franjas horarias oficiales:** Selección de horarios (02:00 PM, 02:30 PM, 03:00 PM, etc.) y modalidades (*Presencial en templo*, *Llamada Telefónica*, *Videollamada*).
+* **Confirmación instantánea por WhatsApp:** Genera el mensaje oficial personalizado listo para enviar al feligrés con un solo toque.
+* **Integración con Google Calendar:** Botón directo para añadir la cita a Google Calendar.
+
+### 2. 👥 Directorio y Gestión de Consolidadores & Discipuladores
+* **Fichas de Perfil Pastoral:** Directorio completo de **Martha Cecilia Gómez (Consolidador 1)**, **Andrés Felipe Pardo (Consolidador 2)**, **Viviana Torres Mora (Consolidador 3)** y los líderes de discipulado.
+* **Métricas individuales:** Almas activas a cargo, alertas de inactividad, porcentaje de avance en la ruta de 6 pasos.
+* **Listado de hermanos asignados:** Visualización de los creyentes asignados a cada consolidador con acceso a su ficha de vida y botón para **reasignar equitativamente**.
+* **Simulación en 1 clic:** Botón rápido para operar con la vista de cualquier consolidador.
+
+### 3. 📝 Agendamiento de Consejería Directo en la Ficha de Conexión
+* Al registrar un nuevo visitante (tanto en el modal interno como en la Ficha de Conexión pública), si se marca **«Solicitar Consejería»**, el formulario despliega de inmediato el **selector de agenda con calendario**.
+* Permite seleccionar el día (con botones directos para el próximo Martes o Jueves pastoral), la franja horaria y la modalidad.
+* Al guardar el registro, la persona se integra a la base de consolidación y su cita queda automáticamente programada en el **Calendario Pastoral**.
+
+### 4. 📖 Discipulado Integral: Libro «Nuevos Creyentes» (13 Lecciones)
+* Formación doctrinal completa con versículos bíblicos de memorización, preguntas de reflexión y seguimiento de asistencia semana a semana.
+* Registro de graduados y derivación al **Consolidado Ministerial** para servicio en Alabanza, Bienvenida, Niños, Misiones o Logística.
+
+### 5. 🔔 Buzón de Notificaciones y Mensajería Interna en la App (Multi-Perfil)
 * **Botón en barra superior:** Disponible para **todos los perfiles** (`🔔 Notificaciones`) con contador dinámico en rojo que parpadea ante alertas pendientes.
 * **Aislamiento por perfil:** Cada líder ve únicamente las alertas pertinentes a su ministerio:
   * **🕊️ Pastor Edgar:** Solicitudes de consejería urgentes, números telefónicos con horario de contacto preferido, miembros escalados por inactividad y resúmenes ejecutivos.

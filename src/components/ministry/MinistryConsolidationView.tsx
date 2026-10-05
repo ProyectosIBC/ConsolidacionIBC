@@ -6,13 +6,13 @@ import { generarEnlaceWhatsApp } from '../../lib/whatsappUtils';
 export const MinistryConsolidationView: React.FC = () => {
   const { members, updateMinistryPlacement } = useApp();
   const [assigningId, setAssigningId] = useState<string | null>(null);
-  const [selectedMinistry, setSelectedMinistry] = useState<string>('Matrimonios / Células de Hogar');
+  const [selectedMinistry, setSelectedMinistry] = useState<string>('Matrimonios y Familias');
 
   // Miembros que ya completaron el discipulado (13 lecciones) o están en fase avanzada listos para ministerio
   const graduatedMembers = members.filter((m) => m.discipulado && m.discipulado.completado);
 
   const ministriesList = [
-    'Matrimonios / Células de Hogar',
+    'Matrimonios y Familias',
     'Jóvenes y Adolescentes',
     'Alabanza y Adoración',
     'Escuela Dominical (Niños)',

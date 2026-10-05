@@ -2,12 +2,12 @@ import { Member, CounselingRequest, Donation, SystemConfig, AppLog, AppNotificat
 
 export const INITIAL_CONFIG: SystemConfig = {
   nombreIglesia: 'Iglesia Bautista Central',
-  pastorNombre: 'Pastor Edgar Castaño',
+  pastorNombre: 'Pastor Edgar Castaño Díaz',
   pastorEmail: 'dcrobles23@gmail.com',
   encargadoEmail: 'dcrobles23@gmail.com',
   numeroIglesia: '573195335076',
   prefijoPais: '57',
-  telegramToken: '8805956537:AAHtoRyKXw2gxD_8CNmxAQDgWK1RJTIm8vE',
+  telegramToken: import.meta.env.VITE_TELEGRAM_BOT_TOKEN || '',
   telegramChatId: '7237466564',
   proyectosGoogleEmail: 'proyectosibc26@gmail.com',
   diasContacto: [1, 4], // Lunes (1) y Jueves (4)
@@ -18,6 +18,30 @@ export const INITIAL_CONFIG: SystemConfig = {
     Alta: 6,
     Media: 24,
     Baja: 24,
+  },
+  // Datos oficiales de la Tarjeta Institucional IBC
+  direccionIglesia: 'Carrera 7 # 31a - 78, Bogotá',
+  telefonoFijoIglesia: '34 01 229',
+  whatsappOficialIglesia: '316 331 7875',
+  sitioWebIglesia: 'www.igbautistabog.org',
+  lemaIglesia: 'Creyentes Sanos para una Iglesia Saludable',
+  // Configuración de Envío de Alertas y Notificaciones
+  diasEnvioAlertasSemanales: [1, 4], // Lunes y Jueves
+  horaEnvioAlertas: '08:00',
+  diasConsejeriaPastoral: [2, 4], // Martes y Jueves
+  franjasHorariasConsejeria: [
+    '2:00 PM - 3:00 PM',
+    '3:00 PM - 4:00 PM',
+    '4:00 PM - 5:00 PM',
+    '5:00 PM - 6:00 PM'
+  ],
+  alertasActivas: {
+    alertasSemanalesConsolidacion: true,
+    alertasAusenciasDiscipulado: true,
+    recordatoriosProximaClaseDiscipulado: true,
+    alertasGraduacionDiscipuladoPastor: true,
+    alertasConsejeriaSLA: true,
+    alertasNuevasDecisionesSalvacion: true,
   },
 };
 
@@ -40,19 +64,33 @@ export const INITIAL_MEMBERS: Member[] = [
     ciclosContacto: 1,
     ultimoContacto: daysAgo(1),
     proximoContacto: daysAhead(1),
-    notas: 'Llegó el domingo por invitación de la familia Gómez. Interesado en grupo de matrimonios.',
-    ministerioInteres: 'Matrimonios / Células de Hogar',
+    notas: 'Llegó el domingo por invitación de la familia Gómez. Decidió entregar su vida a Cristo.',
+    ministerioInteres: 'Matrimonios y Familias',
     necesitaTransporte: false,
     consolidadorId: 'cons-1',
     consolidadorNombre: 'Martha Cecilia Gómez (Consolidador 1)',
     discipuladorId: 'disc-1',
     discipuladorNombre: 'Samuel Esteban Silva (Discipulador)',
+    // Campos Tarjeta de Conexión oficial
+    fechaNacimiento: '14/05/1992',
+    direccionBarrioCiudad: 'Cra 13 # 45-20, Chapinero, Bogotá',
+    estadoCivil: 'Casado/a',
+    condicionAsistencia: 'Soy nuevo/a aquí',
+    decidioEntregarVidaAJesus: true,
+    interesBautismo: true,
+    interesConsejeria: false,
+    interesServirVoluntario: true,
+    ministerioDeseado: 'Matrimonios y Familias',
     discipulado: {
       leccionActual: 5,
       completado: false,
       discipuladorId: 'disc-1',
       discipuladorNombre: 'Samuel Esteban Silva',
       fechaInicio: daysAgo(10),
+      proximaClaseFecha: '2026-10-06T19:00',
+      proximaClaseModalidad: 'Presencial (Templo Cra 7 # 31a-78)',
+      inasistenciasConsecutivas: 0,
+      totalInasistencias: 0,
     },
     pasoActualRuta: 4,
     historialRuta: [
@@ -135,12 +173,38 @@ export const INITIAL_MEMBERS: Member[] = [
     ciclosContacto: 2,
     ultimoContacto: daysAgo(5),
     proximoContacto: daysAgo(1),
-    notas: 'No ha contestado mensajes de la semana 1 ni de la semana 2. Escalar llamada con el Pastor.',
+    notas: 'No ha contestado mensajes de la semana 1 ni de la semana 2. Faltó a sus 2 últimas sesiones de discipulado por viaje.',
     motivoAusencia: 'Viaje laboral fuera de Bogotá reportado por familiar.',
     escaladoPastor: true,
     fechaEscalamiento: daysAgo(1),
     consolidadorId: 'cons-3',
     consolidadorNombre: 'Viviana Torres Mora (Consolidador 3)',
+    discipuladorId: 'disc-3',
+    discipuladorNombre: 'David Camilo Robles (Discipulador)',
+    // Campos Tarjeta de Conexión oficial
+    fechaNacimiento: '08/11/1988',
+    direccionBarrioCiudad: 'Calle 140 # 19-35, Cedritos, Bogotá',
+    estadoCivil: 'Soltero/a',
+    condicionAsistencia: 'Hace tiempo que no venía',
+    decidioEntregarVidaAJesus: false,
+    interesBautismo: false,
+    interesConsejeria: true,
+    interesServirVoluntario: false,
+    discipulado: {
+      leccionActual: 3,
+      completado: false,
+      discipuladorId: 'disc-3',
+      discipuladorNombre: 'David Camilo Robles',
+      fechaInicio: daysAgo(20),
+      proximaClaseFecha: '2026-10-07T18:30',
+      proximaClaseModalidad: 'Virtual (Google Meet / Zoom)',
+      inasistenciasConsecutivas: 2,
+      totalInasistencias: 2,
+      historialInasistencias: [
+        { fecha: daysAgo(7), motivo: 'Viaje laboral a Medellín', notificado: true },
+        { fecha: daysAgo(2), motivo: 'Turno nocturno en empresa', notificado: false }
+      ]
+    },
     pasoActualRuta: 2,
     historialRuta: [
       { paso: 1, completado: true, fechaCompletado: daysAgo(12) }
@@ -332,9 +396,11 @@ export const INITIAL_COUNSELING: CounselingRequest[] = [
     slaHours: 24,
     fechaSolicitud: hoursAgo(19), // En zona de advertencia (>75% del tiempo consumido)
     estado: 'En acompañamiento',
-    pastorAsignado: 'Pastor Edgar',
+    pastorAsignado: 'Pastor Edgar Castaño Díaz',
     escalado: false,
     fechaAtencion: hoursAgo(5),
+    fechaCitaAgendada: '2026-10-06T16:00',
+    modalidadCita: 'Presencial (Oficina Pastoral Cra 7 # 31a-78)',
     notas: [
       {
         id: 'note-02',
@@ -613,7 +679,7 @@ export const INITIAL_NOTIFICATIONS: AppNotification[] = [
     destinatarioPerfilId: 'cons-3',
     remitenteNombre: 'Sistema de Consolidación',
     titulo: '🌱 3 Hermanos en tu Grupo de Consolidación',
-    mensaje: 'Recuerda que este miércoles tenemos la reunión de célula de hogar para tus asignados.',
+    mensaje: 'Recuerda que este miércoles tenemos la reunión de grupo de estudio bíblico para tus asignados.',
     tipo: 'miembro',
     leida: false,
     fecha: hoursAgo(5),

@@ -59,9 +59,17 @@ export const Header: React.FC<HeaderProps> = ({
       title: 'Consolidación de Miembros (Kanban)',
       subtitle: 'Acompañamiento en el ciclo de 8 semanas, alertas de inactividad y asignación por consolidador.',
     },
+    consolidators: {
+      title: 'Equipo de Consolidadores & Perfiles',
+      subtitle: 'Directorio de líderes, hermanos a cargo, estadísticas y asignaciones de la ruta de 6 pasos.',
+    },
     counseling: {
       title: 'Consejería Pastoral y Tiempos de Atención',
       subtitle: 'Supervisión en tiempo real con semáforo: Alta (6h), Media (24h) y Baja (24h).',
+    },
+    'counseling-calendar': {
+      title: 'Calendario Mensual de Consejería Pastoral',
+      subtitle: 'Agenda interactiva de citas, franjas horarias pastorales y confirmaciones directas por WhatsApp.',
     },
     schedule: {
       title: 'Cronograma Semanal y Plantillas',
@@ -94,6 +102,10 @@ export const Header: React.FC<HeaderProps> = ({
     'telegram-automation': {
       title: 'Automatización y Contenidos de Telegram',
       subtitle: 'Repositorio de plantillas pastorales, YouTube Shorts y envío automático.',
+    },
+    'alerts-config': {
+      title: 'Configuración de Alertas & Diagnóstico',
+      subtitle: 'Personaliza los días de disparo de avisos, cronograma de consejería y verifica la salud de la app.',
     },
     settings: {
       title: 'Ajustes del Sistema y Telegram Bot',
@@ -177,7 +189,11 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           ) : (
             /* Para Pastor y Consolidadores: PERFIL ESTRICTAMENTE AISLADO A SU CUENTA */
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl shadow-2xs">
+            <button
+              onClick={() => setCurrentView('consolidators')}
+              className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl shadow-2xs transition-colors cursor-pointer"
+              title="Ver perfiles y equipo de consolidadores"
+            >
               <div
                 className={`w-6 h-6 rounded-lg flex items-center justify-center text-xs font-bold shrink-0 ${
                   activeRole === 'pastor'
@@ -196,10 +212,10 @@ export const Header: React.FC<HeaderProps> = ({
                   {activeUserProfile.nombre}
                 </span>
                 <span className="text-[10px] text-slate-500 font-semibold leading-tight">
-                  {activeUserProfile.rolLabel}
+                  {activeUserProfile.rolLabel} • Ver Perfiles
                 </span>
               </div>
-            </div>
+            </button>
           )}
 
           {/* BOTÓN DE NOTIFICACIONES Y MENSAJES PARA CADA PERFIL */}

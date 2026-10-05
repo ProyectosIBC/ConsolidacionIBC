@@ -50,16 +50,16 @@ export const ROADMAP_STEPS: RoadmapStepInfo[] = [
     fase: 'Relación y Escucha',
     semanas: 'Semanas 1 - 2',
     descripcion: 'Llamada testimonial o café informal con el consolidador asignado para resolver inquietudes y escuchar sus necesidades.',
-    accionSiguiente: 'Invitarlo a una reunión de grupo pequeño / célula de hogar según su afinidad (matrimonios, jóvenes, familias).',
+    accionSiguiente: 'Invitarlo a una reunión de grupo de conexión y estudio bíblico según su afinidad (matrimonios, jóvenes, familias).',
     mensajePredeterminado:
       '¡Hola [Nombre]! Te saluda [Tu Nombre] de la Iglesia Bautista Central. Nos encantaría compartir un café o una llamada corta para saludarte, saber cómo te has sentido en la iglesia y responder cualquier inquietud. ¿Qué día te queda mejor esta semana? 😊',
   },
   {
     paso: 3,
-    titulo: 'Grupo de Conexión / Célula de Hogar',
+    titulo: 'Grupo de Conexión & Fraternidad',
     fase: 'Vida en Comunidad',
     semanas: 'Semanas 3 - 4',
-    descripcion: 'Participación activa en un grupo pequeño en casa, devocionales semanales y comunión fraternal con otros hermanos.',
+    descripcion: 'Participación activa en un grupo de conexión y estudio bíblico, devocionales semanales y comunión fraternal con otros hermanos.',
     accionSiguiente: 'Animar a dar el paso a los talleres de Fundamentos de la Fe y Discipulado Bíblico.',
     mensajePredeterminado:
       '¡Hola [Nombre]! Esperamos que estés muy bien. Queremos invitarte a nuestro grupo pequeño de estudio bíblico y amistad esta semana. Es un espacio hermoso para aprender la palabra y compartir en familia. ¿Te animas a acompañarnos? ¡Te guardamos un lugar!',

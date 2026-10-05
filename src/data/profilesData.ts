@@ -46,7 +46,7 @@ export const USER_PROFILES: UserProfileInfo[] = [
     rol: 'consolidador',
     rolLabel: 'Consolidadora Líder 3',
     badge: '🤝 Consolidadora',
-    descripcion: 'Integración a células de hogar, consolidación de familias y afirmación en fundamentos doctrinales.',
+    descripcion: 'Integración a grupos de conexión y estudio bíblico, consolidación de familias y afirmación en fundamentos doctrinales.',
     avatarColor: 'bg-purple-600 text-white',
   },
   {
