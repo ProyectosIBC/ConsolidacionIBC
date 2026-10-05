@@ -221,34 +221,75 @@ export const LoginView: React.FC = () => {
                 </button>
 
                 {/* Consolidadores */}
-                <div className="grid grid-cols-3 gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => handleQuickLogin('martha.gomez', 'Martha2026*')}
-                    className="p-2 rounded-xl bg-[#f4efe4] hover:bg-[#ede5d6] border border-[#e8e2d5] text-left text-xs transition-all cursor-pointer"
-                    title="Martha Gómez (Consolidador 1)"
-                  >
-                    <p className="font-bold text-[#332921] truncate font-serif-fraunces">Martha G.</p>
-                    <p className="text-[9px] text-[#46543c] font-semibold truncate">Consolidador 1</p>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleQuickLogin('andres.pardo', 'Andres2026*')}
-                    className="p-2 rounded-xl bg-[#f4efe4] hover:bg-[#ede5d6] border border-[#e8e2d5] text-left text-xs transition-all cursor-pointer"
-                    title="Andrés Pardo (Consolidador 2)"
-                  >
-                    <p className="font-bold text-[#332921] truncate font-serif-fraunces">Andrés P.</p>
-                    <p className="text-[9px] text-[#46543c] font-semibold truncate">Consolidador 2</p>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleQuickLogin('viviana.torres', 'Viviana2026*')}
-                    className="p-2 rounded-xl bg-[#f4efe4] hover:bg-[#ede5d6] border border-[#e8e2d5] text-left text-xs transition-all cursor-pointer"
-                    title="Viviana Torres (Consolidador 3)"
-                  >
-                    <p className="font-bold text-[#332921] truncate font-serif-fraunces">Viviana T.</p>
-                    <p className="text-[9px] text-[#46543c] font-semibold truncate">Consolidador 3</p>
-                  </button>
+                <div className="space-y-1">
+                  <span className="text-[10px] font-bold text-[#6b5a4d] uppercase tracking-wider font-mono-space block">
+                    🤝 Equipo de Consolidadores (Ruta de 6 Pasos)
+                  </span>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => handleQuickLogin('martha.gomez', 'Martha2026*')}
+                      className="p-2 rounded-xl bg-[#f4efe4] hover:bg-[#ede5d6] border border-[#e8e2d5] text-left text-xs transition-all cursor-pointer"
+                      title="Martha Gómez (Consolidador 1)"
+                    >
+                      <p className="font-bold text-[#332921] truncate font-serif-fraunces">Martha G.</p>
+                      <p className="text-[9px] text-[#46543c] font-semibold truncate font-mono-space">Martha2026*</p>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleQuickLogin('andres.pardo', 'Andres2026*')}
+                      className="p-2 rounded-xl bg-[#f4efe4] hover:bg-[#ede5d6] border border-[#e8e2d5] text-left text-xs transition-all cursor-pointer"
+                      title="Andrés Pardo (Consolidador 2)"
+                    >
+                      <p className="font-bold text-[#332921] truncate font-serif-fraunces">Andrés P.</p>
+                      <p className="text-[9px] text-[#46543c] font-semibold truncate font-mono-space">Andres2026*</p>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleQuickLogin('viviana.torres', 'Viviana2026*')}
+                      className="p-2 rounded-xl bg-[#f4efe4] hover:bg-[#ede5d6] border border-[#e8e2d5] text-left text-xs transition-all cursor-pointer"
+                      title="Viviana Torres (Consolidador 3)"
+                    >
+                      <p className="font-bold text-[#332921] truncate font-serif-fraunces">Viviana T.</p>
+                      <p className="text-[9px] text-[#46543c] font-semibold truncate font-mono-space">Viviana2026*</p>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Discipuladores */}
+                <div className="space-y-1">
+                  <span className="text-[10px] font-bold text-[#6b5a4d] uppercase tracking-wider font-mono-space block">
+                    📖 Equipo de Discipuladores (13 Lecciones)
+                  </span>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => handleQuickLogin('samuel.silva', 'Samuel2026*')}
+                      className="p-2 rounded-xl bg-[#edf3eb] hover:bg-[#dfecdd] border border-[#a9bb9e]/60 text-left text-xs transition-all cursor-pointer"
+                      title="Samuel Esteban Silva (Discipulador 1)"
+                    >
+                      <p className="font-bold text-[#332921] truncate font-serif-fraunces">Samuel S.</p>
+                      <p className="text-[9px] text-[#46543c] font-semibold truncate font-mono-space">Samuel2026*</p>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleQuickLogin('claudia.roa', 'Claudia2026*')}
+                      className="p-2 rounded-xl bg-[#edf3eb] hover:bg-[#dfecdd] border border-[#a9bb9e]/60 text-left text-xs transition-all cursor-pointer"
+                      title="Claudia Milena Roa (Discipuladora 2)"
+                    >
+                      <p className="font-bold text-[#332921] truncate font-serif-fraunces">Claudia R.</p>
+                      <p className="text-[9px] text-[#46543c] font-semibold truncate font-mono-space">Claudia2026*</p>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleQuickLogin('david.robles', 'David2026*')}
+                      className="p-2 rounded-xl bg-[#edf3eb] hover:bg-[#dfecdd] border border-[#a9bb9e]/60 text-left text-xs transition-all cursor-pointer"
+                      title="David Camilo Robles (Discipulador 3)"
+                    >
+                      <p className="font-bold text-[#332921] truncate font-serif-fraunces">David R.</p>
+                      <p className="text-[9px] text-[#46543c] font-semibold truncate font-mono-space">David2026*</p>
+                    </button>
+                  </div>
                 </div>
 
                 {/* Desarrollador */}

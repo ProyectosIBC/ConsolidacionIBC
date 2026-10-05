@@ -75,10 +75,10 @@ export const USER_PROFILES: UserProfileInfo[] = [
   },
   {
     id: 'disc-3',
-    username: 'david.moreno',
+    username: 'david.robles',
     password: 'David2026*',
-    nombre: 'David Leonardo Moreno',
-    email: 'david.moreno@ibcbogota.org',
+    nombre: 'David Camilo Robles',
+    email: 'dcrobles23@gmail.com',
     rol: 'discipulador',
     rolLabel: 'Discipulador Líder 3',
     badge: '📖 Discipulador',

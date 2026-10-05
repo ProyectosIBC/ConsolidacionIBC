@@ -19,6 +19,7 @@ import {
   Send,
   UserCheck,
   Building,
+  BookOpen,
 } from 'lucide-react';
 import { generarEnlaceWhatsApp, personalizarMensaje } from '../../lib/whatsappUtils';
 import { formatColombianTime } from '../../lib/dateUtils';
@@ -31,7 +32,9 @@ interface MemberProfileModalProps {
 export const MemberProfileModal: React.FC<MemberProfileModalProps> = ({ member, onClose }) => {
   const {
     consolidators,
+    userProfiles,
     reassignConsolidator,
+    reassignDiscipulador,
     advanceMemberRoadmap,
     changeMemberStatus,
     registerContactAttempt,
@@ -118,26 +121,45 @@ export const MemberProfileModal: React.FC<MemberProfileModalProps> = ({ member, 
           </button>
         </div>
 
-        {/* Asignación de Consolidador y Estado */}
+        {/* Asignación de Consolidador, Discipulador y Estado */}
         <div className="py-3 px-4 bg-slate-50 rounded-2xl border border-slate-100 my-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <UserCheck className="w-4 h-4 text-emerald-600" />
-            <span className="text-xs font-semibold text-slate-600">Consolidador Asignado:</span>
-            <select
-              value={selectedConsolidator || member.consolidadorId}
-              onChange={(e) => handleReassign(e.target.value)}
-              className="text-xs font-bold py-1 px-2.5 rounded-lg border border-slate-200 bg-white text-slate-800 shadow-2xs"
-            >
-              {consolidators.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.alias} — {c.nombre}
-                </option>
-              ))}
-            </select>
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              <UserCheck className="w-4 h-4 text-emerald-600" />
+              <span className="text-xs font-semibold text-slate-600">Consolidador:</span>
+              <select
+                value={selectedConsolidator || member.consolidadorId}
+                onChange={(e) => handleReassign(e.target.value)}
+                className="text-xs font-bold py-1 px-2 rounded-lg border border-slate-200 bg-white text-slate-800 shadow-2xs"
+              >
+                {consolidators.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.alias} — {c.nombre}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <BookOpen className="w-4 h-4 text-amber-600" />
+              <span className="text-xs font-semibold text-slate-600">Discipulador:</span>
+              <select
+                value={member.discipuladorId || member.discipulado?.discipuladorId || ''}
+                onChange={(e) => reassignDiscipulador(member.id, e.target.value)}
+                className="text-xs font-bold py-1 px-2 rounded-lg border border-slate-200 bg-white text-slate-800 shadow-2xs"
+              >
+                <option value="">Por asignar</option>
+                {userProfiles.filter((p) => p.rol === 'discipulador').map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.nombre} ({d.rolLabel})
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-slate-600">Estado de Consolidación:</span>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="text-xs font-semibold text-slate-600">Estado:</span>
             <select
               value={member.estadoSeguimiento}
               onChange={(e) => changeMemberStatus(member.id, e.target.value as FollowUpStatus)}

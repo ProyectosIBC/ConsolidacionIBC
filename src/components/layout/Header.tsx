@@ -60,8 +60,8 @@ export const Header: React.FC<HeaderProps> = ({
       subtitle: 'Acompañamiento en el ciclo de 8 semanas, alertas de inactividad y asignación por consolidador.',
     },
     consolidators: {
-      title: 'Equipo de Consolidadores & Perfiles',
-      subtitle: 'Directorio de líderes, hermanos a cargo, estadísticas y asignaciones de la ruta de 6 pasos.',
+      title: 'Consolidadores y Discipuladores (6 Líderes Activos)',
+      subtitle: 'Directorio de los 3 consolidadores y 3 discipuladores activos, credenciales, asignados y seguimiento.',
     },
     counseling: {
       title: 'Consejería Pastoral y Tiempos de Atención',
@@ -181,6 +181,11 @@ export const Header: React.FC<HeaderProps> = ({
                   <option value="cons-1">Martha Cecilia Gómez (Consolidador 1)</option>
                   <option value="cons-2">Andrés Felipe Pardo (Consolidador 2)</option>
                   <option value="cons-3">Viviana Torres Mora (Consolidador 3)</option>
+                </optgroup>
+                <optgroup label="📖 Equipo de Discipuladores">
+                  <option value="disc-1">Samuel Esteban Silva (Discipulador 1)</option>
+                  <option value="disc-2">Claudia Milena Roa (Discipuladora 2)</option>
+                  <option value="disc-3">David Camilo Robles (Discipulador 3)</option>
                 </optgroup>
                 <optgroup label="💻 Administración & DevOps">
                   <option value="dev">Desarrollador (Proyectos IBC)</option>

@@ -105,6 +105,7 @@ interface AppContextType {
   advanceMemberWeek: (id: string) => void;
   registerContactAttempt: (id: string) => void;
   reassignConsolidator: (memberId: string, consolidatorId: string) => void;
+  reassignDiscipulador: (memberId: string, discipuladorId: string) => void;
 
   // Roadmap & Discipleship actions
   advanceMemberRoadmap: (memberId: string, stepNumber?: number, notes?: string) => void;
@@ -137,6 +138,8 @@ interface AppContextType {
   // Config actions
   updateConfig: (updates: Partial<SystemConfig>) => void;
   resetToDefaults: () => void;
+  clearAllDataForProduction: () => void;
+  importOfficialData: (data: { members?: Member[]; counseling?: CounselingRequest[]; donations?: Donation[] }) => void;
 
   // Supabase Live Status
   supabaseStatus: 'connected' | 'checking' | 'error';
@@ -671,6 +674,30 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
 
     showToast('success', `Reasignado a ${targetCons.alias} (${targetCons.nombre})`, 'Reasignación');
+  };
+
+  const reassignDiscipulador = (memberId: string, discipuladorId: string) => {
+    const discProfile = USER_PROFILES.find((p) => p.id === discipuladorId);
+    if (!discProfile) return;
+
+    setMembers((prev) =>
+      prev.map((m) => {
+        if (m.id !== memberId) return m;
+        const currentDisc = m.discipulado || { leccionActual: 1, completado: false };
+        return {
+          ...m,
+          discipuladorId,
+          discipuladorNombre: discProfile.nombre,
+          discipulado: {
+            ...currentDisc,
+            discipuladorId,
+            discipuladorNombre: discProfile.nombre,
+          },
+        };
+      })
+    );
+
+    showToast('success', `Discipulador asignado: ${discProfile.nombre}`, 'Asignación de Discipulado');
   };
 
   // Avanzar Paso en la Ruta de Crecimiento & Servicio
@@ -1463,6 +1490,38 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('info', 'Datos restablecidos a la semilla inicial de IBC Bogotá', 'Datos Restaurados');
   };
 
+  // Limpiar toda la base de datos para inicio oficial de producción
+  const clearAllDataForProduction = () => {
+    setMembers([]);
+    setCounseling([]);
+    setDonations([]);
+    setNotifications([]);
+    setLogs([]);
+    localStorage.setItem(STORAGE_KEYS.MEMBERS, JSON.stringify([]));
+    localStorage.setItem(STORAGE_KEYS.COUNSELING, JSON.stringify([]));
+    localStorage.setItem(STORAGE_KEYS.DONATIONS, JSON.stringify([]));
+    localStorage.setItem(STORAGE_KEYS.NOTIFICATIONS, JSON.stringify([]));
+    localStorage.setItem(STORAGE_KEYS.LOGS, JSON.stringify([]));
+    showToast('success', 'Base de datos en blanco. Lista para recibir los datos oficiales de IBC.', 'Base de Datos Limpia');
+  };
+
+  // Importar lote de datos oficiales de producción
+  const importOfficialData = (data: { members?: Member[]; counseling?: CounselingRequest[]; donations?: Donation[] }) => {
+    if (data.members && Array.isArray(data.members)) {
+      setMembers(data.members);
+      localStorage.setItem(STORAGE_KEYS.MEMBERS, JSON.stringify(data.members));
+    }
+    if (data.counseling && Array.isArray(data.counseling)) {
+      setCounseling(data.counseling);
+      localStorage.setItem(STORAGE_KEYS.COUNSELING, JSON.stringify(data.counseling));
+    }
+    if (data.donations && Array.isArray(data.donations)) {
+      setDonations(data.donations);
+      localStorage.setItem(STORAGE_KEYS.DONATIONS, JSON.stringify(data.donations));
+    }
+    showToast('success', 'Datos oficiales importados y sincronizados correctamente', 'Carga Exitosa');
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -1490,6 +1549,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         advanceMemberWeek,
         registerContactAttempt,
         reassignConsolidator,
+        reassignDiscipulador,
         advanceMemberRoadmap,
         updateDiscipleshipProgress,
         updateMinistryPlacement,
@@ -1504,6 +1564,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         toggleVerifyDonation,
         updateConfig,
         resetToDefaults,
+        clearAllDataForProduction,
+        importOfficialData,
         supabaseStatus,
         supabaseMessage,
         testSupabase,

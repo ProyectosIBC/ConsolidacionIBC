@@ -402,6 +402,213 @@ export const DashboardView: React.FC = () => {
   }
 
   /* =========================================================================
+     1.5 VISTA EXCLUSIVA PARA DISCIPULADORES (Samuel Silva, Claudia Roa, David Robles)
+     Enfocada en sus discípulos asignados, libro Nuevos Creyentes (13 lecciones) y clases.
+     ========================================================================= */
+  if (activeRole === 'discipulador') {
+    const misDiscipulos = members.filter(
+      (m) => m.discipuladorId === activeProfile || (m.discipulado && m.discipulado.discipuladorId === activeProfile)
+    );
+    const discipulosCompletados = misDiscipulos.filter((m) => m.discipulado?.completado);
+    const discipulosEnProceso = misDiscipulos.filter((m) => !m.discipulado?.completado);
+
+    return (
+      <div className="space-y-6 pb-12 font-sans-karla text-[#332921]">
+        {/* Banner de Bienvenida Cálido */}
+        <div className="bg-[#283322] text-[#f4efe4] p-5 sm:p-6 rounded-3xl border border-[#3e4c35] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-[#46543c] border border-[#a9bb9e]/30 text-[#f3ddd2] flex items-center justify-center font-bold text-lg shrink-0">
+              📖
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-serif-fraunces font-bold text-base sm:text-lg text-white leading-tight">
+                ¡Paz y gracia sobre tu discipulado, {activeUserProfile.nombre}!
+              </h3>
+              <p className="text-xs text-[#f3ddd2] italic font-serif-fraunces leading-relaxed max-w-2xl">
+                «Por tanto, id, y haced discípulos a todas las naciones... enseñándoles que guarden todas las cosas que os he mandado.» <span className="font-bold not-italic text-[#a9bb9e] ml-1">(Mateo 28:19-20)</span>
+              </p>
+              <p className="text-xs text-[#a9bb9e] pt-0.5">
+                Rol: <strong className="text-white">{activeUserProfile.rolLabel}</strong> · Tienes <strong className="text-[#f3ddd2]">{misDiscipulos.length} hermanos en formación bíblica</strong> (Libro Nuevos Creyentes).
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setCurrentView('discipleship')}
+            className="px-4 py-2.5 rounded-xl bg-[#bd5c3f] hover:bg-[#a54b30] text-white text-xs font-bold transition-all shadow-md shadow-[#bd5c3f]/25 shrink-0 self-start md:self-center cursor-pointer flex items-center gap-1.5"
+          >
+            <BookOpen className="w-4 h-4" />
+            <span>Ver Libro de 13 Lecciones</span>
+          </button>
+        </div>
+
+        {/* 3 Métricas Clave de Discipulado */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="bg-white p-5 rounded-2xl border border-[#e8e2d5] shadow-xs">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#6b5a4d] uppercase tracking-wider font-mono-space">
+                Mis Discípulos
+              </span>
+              <div className="w-8 h-8 rounded-lg bg-[#edf3eb] text-[#46543c] flex items-center justify-center">
+                <Users className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="mt-2">
+              <span className="text-3xl font-serif-fraunces font-bold text-[#332921]">{misDiscipulos.length}</span>
+              <p className="text-xs text-[#6b5a4d] mt-1">Creyentes bajo tu instrucción doctrinal</p>
+            </div>
+          </div>
+
+          <div className="bg-white p-5 rounded-2xl border border-[#e8e2d5] shadow-xs">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#6b5a4d] uppercase tracking-wider font-mono-space">
+                En Formación Activa
+              </span>
+              <div className="w-8 h-8 rounded-lg bg-[#f3ddd2] text-[#bd5c3f] flex items-center justify-center">
+                <BookOpen className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="mt-2">
+              <span className="text-3xl font-serif-fraunces font-bold text-[#332921]">{discipulosEnProceso.length}</span>
+              <p className="text-xs text-[#6b5a4d] mt-1">Cursando lecciones 1 a 13</p>
+            </div>
+          </div>
+
+          <div className="bg-white p-5 rounded-2xl border border-[#e8e2d5] shadow-xs">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#6b5a4d] uppercase tracking-wider font-mono-space">
+                Graduados
+              </span>
+              <div className="w-8 h-8 rounded-lg bg-[#edf3eb] text-[#46543c] flex items-center justify-center">
+                <Award className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="mt-2">
+              <span className="text-3xl font-serif-fraunces font-bold text-[#332921]">
+                {discipulosCompletados.length}
+              </span>
+              <p className="text-xs text-[#6b5a4d] mt-1">13 lecciones completadas con éxito</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Lista de Discípulos Asignados */}
+        <div className="bg-white rounded-3xl border border-[#e8e2d5] shadow-xs p-6 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-[#e8e2d5]">
+            <div>
+              <h3 className="text-base font-serif-fraunces font-bold text-[#332921]">
+                Mis Discípulos — Acompañamiento y Lecciones
+              </h3>
+              <p className="text-xs text-[#6b5a4d]">
+                Monitorea el progreso de cada alumno en las 13 lecciones del libro "Nuevos Creyentes" y agenda encuentros.
+              </p>
+            </div>
+            <button
+              onClick={() => setCurrentView('discipleship')}
+              className="text-xs font-bold text-[#bd5c3f] hover:text-[#a54b30] flex items-center gap-1 cursor-pointer font-serif-fraunces"
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>Abrir Manual Completo</span>
+            </button>
+          </div>
+
+          {misDiscipulos.length === 0 ? (
+            <div className="py-12 text-center">
+              <CheckCircle2 className="w-10 h-10 text-[#46543c] mx-auto mb-2 opacity-80" />
+              <p className="text-sm font-semibold text-[#332921]">No tienes discípulos asignados en este momento</p>
+              <p className="text-xs text-[#6b5a4d]">El pastor te asignará nuevos creyentes que hayan completado sus primeras semanas de consolidación.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {misDiscipulos.map((member) => {
+                const disc = member.discipulado;
+                const leccionActual = disc?.leccionActual || 1;
+                const completado = disc?.completado || false;
+
+                const defaultMsg = `¡Hola, ${member.nombre}! Te saluda ${activeUserProfile.nombre}, tu discipulador de la Iglesia Bautista Central de Bogotá. Te escribo para coordinar nuestro próximo estudio de la lección del libro Nuevos Creyentes. ¿Cómo te encuentras esta semana?`;
+
+                return (
+                  <div
+                    key={member.id}
+                    className="p-4 rounded-2xl border border-[#e8e2d5] bg-white hover:border-[#a9bb9e] shadow-2xs transition-all flex flex-col justify-between space-y-3"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-bold text-[#332921] font-serif-fraunces">{member.nombre}</span>
+                        <span
+                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full font-mono-space ${
+                            completado
+                              ? 'bg-[#edf3eb] text-[#46543c]'
+                              : 'bg-[#f3ddd2] text-[#bd5c3f]'
+                          }`}
+                        >
+                          {completado ? 'Graduado (13/13)' : `Lección ${leccionActual}/13`}
+                        </span>
+                      </div>
+
+                      <p className="text-xs text-[#6b5a4d] flex items-center gap-1.5 flex-wrap">
+                        <Phone className="w-3 h-3 text-[#a9bb9e]" />
+                        <span className="font-mono-space">{member.telefono}</span>
+                        <span aria-hidden="true">·</span>
+                        <span>{member.tipo}</span>
+                      </p>
+
+                      {/* Progreso de 13 Lecciones */}
+                      <div className="mt-3 pt-3 border-t border-[#e8e2d5]">
+                        <div className="flex items-center justify-between text-[11px] mb-1 font-mono-space">
+                          <span className="font-semibold text-[#6b5a4d]">
+                            Lección {leccionActual} de 13
+                          </span>
+                          <span className="font-bold text-[#bd5c3f]">
+                            {Math.round((leccionActual / 13) * 100)}%
+                          </span>
+                        </div>
+                        <div className="w-full h-1.5 bg-[#f4efe4] rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-[#46543c] to-[#bd5c3f] rounded-full"
+                            style={{ width: `${(leccionActual / 13) * 100}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-[#e8e2d5]">
+                      <button
+                        onClick={() => setSelectedMemberForModal(member)}
+                        className="text-xs font-bold text-[#46543c] hover:text-[#332921] flex items-center gap-1 cursor-pointer font-serif-fraunces"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-[#bd5c3f]" />
+                        <span>Ver Expediente</span>
+                      </button>
+
+                      {member.telefono && (
+                        <a
+                          href={generarEnlaceWhatsApp(member.telefono, defaultMsg)}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-3 py-1.5 rounded-xl bg-[#283322] hover:bg-[#35432d] text-white text-xs font-bold flex items-center gap-1.5 transition-colors shadow-2xs"
+                        >
+                          <MessageCircle className="w-3.5 h-3.5 text-[#a9bb9e]" />
+                          <span>WhatsApp</span>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Modal de Expediente si se abre */}
+        <MemberProfileModal
+          member={selectedMemberForModal}
+          onClose={() => setSelectedMemberForModal(null)}
+        />
+      </div>
+    );
+  }
+
+  /* =========================================================================
      2. VISTA EXCLUSIVA PARA DESARROLLADOR / DEVOPS
      ========================================================================= */
   if (activeRole === 'desarrollador') {
@@ -625,27 +832,50 @@ export const DashboardView: React.FC = () => {
 
         {/* Botón Rápido para simular / probar otros perfiles */}
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-xs text-[#6b5a4d] font-bold font-mono-space">Probar como:</span>
+          <span className="text-xs text-[#6b5a4d] font-bold font-mono-space">Probar Consolidadores:</span>
           <button
             onClick={() => setActiveProfile('cons-1')}
             className="px-3 py-1.5 rounded-xl bg-[#f4efe4] hover:bg-[#ede5d6] text-[#46543c] border border-[#e8e2d5] text-xs font-bold cursor-pointer transition-all"
-            title="Probar vista de Martha Gómez"
+            title="Probar vista de Martha Gómez (Consolidador 1)"
           >
             Martha G.
           </button>
           <button
             onClick={() => setActiveProfile('cons-2')}
             className="px-3 py-1.5 rounded-xl bg-[#f4efe4] hover:bg-[#ede5d6] text-[#46543c] border border-[#e8e2d5] text-xs font-bold cursor-pointer transition-all"
-            title="Probar vista de Andrés Pardo"
+            title="Probar vista de Andrés Pardo (Consolidador 2)"
           >
             Andrés P.
           </button>
           <button
             onClick={() => setActiveProfile('cons-3')}
             className="px-3 py-1.5 rounded-xl bg-[#f4efe4] hover:bg-[#ede5d6] text-[#46543c] border border-[#e8e2d5] text-xs font-bold cursor-pointer transition-all"
-            title="Probar vista de Viviana Torres"
+            title="Probar vista de Viviana Torres (Consolidador 3)"
           >
             Viviana T.
+          </button>
+
+          <span className="text-xs text-[#6b5a4d] font-bold font-mono-space ml-2">Discipuladores:</span>
+          <button
+            onClick={() => setActiveProfile('disc-1')}
+            className="px-3 py-1.5 rounded-xl bg-[#edf3eb] hover:bg-[#dfecdd] text-[#46543c] border border-[#a9bb9e]/60 text-xs font-bold cursor-pointer transition-all"
+            title="Probar vista de Samuel Silva (Discipulador 1)"
+          >
+            📖 Samuel S.
+          </button>
+          <button
+            onClick={() => setActiveProfile('disc-2')}
+            className="px-3 py-1.5 rounded-xl bg-[#edf3eb] hover:bg-[#dfecdd] text-[#46543c] border border-[#a9bb9e]/60 text-xs font-bold cursor-pointer transition-all"
+            title="Probar vista de Claudia Roa (Discipuladora 2)"
+          >
+            📖 Claudia R.
+          </button>
+          <button
+            onClick={() => setActiveProfile('disc-3')}
+            className="px-3 py-1.5 rounded-xl bg-[#edf3eb] hover:bg-[#dfecdd] text-[#46543c] border border-[#a9bb9e]/60 text-xs font-bold cursor-pointer transition-all"
+            title="Probar vista de David Robles (Discipulador 3)"
+          >
+            📖 David R.
           </button>
         </div>
       </div>

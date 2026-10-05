@@ -80,10 +80,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
     },
     {
       id: 'consolidators',
-      label: 'Equipo de Consolidadores',
+      label: 'Consolidadores y Discipuladores',
       icon: Users,
-      badge: 3,
-      badgeColor: 'bg-blue-600 text-white',
+      badge: 6,
+      badgeColor: 'bg-emerald-600 text-white',
       visible: true,
       section: 'main',
     },

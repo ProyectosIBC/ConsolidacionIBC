@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { formatColombianTime, formatColombianDateTime } from '../../lib/dateUtils';
+import { USER_PROFILES } from '../../data/profilesData';
 import {
   Settings,
   Bot,
@@ -19,10 +20,27 @@ import {
   ExternalLink,
   Lock,
   RefreshCw,
+  Trash2,
+  Users,
+  BookOpen,
+  KeyRound,
+  Copy,
+  Sparkles,
 } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
-  const { config, updateConfig, resetToDefaults, sendTelegramAlert, showToast, members, counseling, donations } = useApp();
+  const {
+    config,
+    updateConfig,
+    resetToDefaults,
+    clearAllDataForProduction,
+    importOfficialData,
+    sendTelegramAlert,
+    showToast,
+    members,
+    counseling,
+    donations,
+  } = useApp();
 
   const [formData, setFormData] = useState({
     nombreIglesia: config.nombreIglesia,
@@ -38,6 +56,9 @@ export const SettingsView: React.FC = () => {
 
   const [testingTelegram, setTestingTelegram] = useState(false);
   const [verifyingBot, setVerifyingBot] = useState(false);
+  const [showWipeModal, setShowWipeModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [pastedJsonText, setPastedJsonText] = useState('');
   const [botStatusResult, setBotStatusResult] = useState<{
     checked: boolean;
     valid?: boolean;
@@ -367,37 +388,250 @@ export const SettingsView: React.FC = () => {
         </div>
       </form>
 
-      {/* Copias de Seguridad y Restauración */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-3">
-        <h3 className="font-bold text-sm text-slate-900">Gestión de Datos y Copias de Seguridad</h3>
-        <p className="text-xs text-slate-500">
-          Exporta todos los registros en formato JSON estándar o restablece los datos a la semilla inicial de prueba.
-        </p>
+      {/* 👥 DIRECTORIO DE PERFILES Y CREDENCIALES OFICIALES (PASTOR, CONSOLIDADORES, DISCIPULADORES) */}
+      <div className="bg-white rounded-3xl border border-[#e8e2d5] shadow-xs p-6 sm:p-8 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-[#e8e2d5]">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#edf3eb] text-[#46543c] text-xs font-bold mb-1 border border-[#a9bb9e]/60 font-mono-space">
+              <KeyRound className="w-3.5 h-3.5" />
+              <span>8 Perfiles del Sistema IBC</span>
+            </div>
+            <h3 className="font-serif-fraunces text-lg sm:text-xl font-bold text-[#332921]">
+              Directorio de Perfiles y Credenciales Asignadas
+            </h3>
+            <p className="text-xs text-[#6b5a4d]">
+              Usuarios y contraseñas asignados por rol para el Pastor, las 3 Consolidadoras y los 3 Discipuladores.
+            </p>
+          </div>
+        </div>
 
-        <div className="flex flex-wrap items-center gap-3 pt-2">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-[#f4efe4] text-[#46543c] font-bold uppercase font-mono-space text-[10px]">
+              <tr>
+                <th className="py-2.5 px-3 rounded-l-xl">Rol / Función</th>
+                <th className="py-2.5 px-3">Nombre</th>
+                <th className="py-2.5 px-3">Usuario</th>
+                <th className="py-2.5 px-3">Contraseña Asignada</th>
+                <th className="py-2.5 px-3 rounded-r-xl">Responsabilidad Principal</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#e8e2d5]">
+              {USER_PROFILES.map((p) => (
+                <tr key={p.id} className="hover:bg-[#faf8f1] transition-colors">
+                  <td className="py-3 px-3 font-semibold text-[#332921] whitespace-nowrap">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#edf3eb] text-[#46543c] text-[11px] font-bold">
+                      {p.badge}
+                    </span>
+                  </td>
+                  <td className="py-3 px-3 font-bold text-[#332921] font-serif-fraunces whitespace-nowrap">
+                    {p.nombre}
+                  </td>
+                  <td className="py-3 px-3 font-mono-space text-[#46543c] font-bold whitespace-nowrap">
+                    {p.username}
+                  </td>
+                  <td className="py-3 px-3 font-mono-space text-[#bd5c3f] font-bold whitespace-nowrap">
+                    <code className="bg-[#f3ddd2] px-2 py-0.5 rounded border border-[#bd5c3f]/30">
+                      {p.password}
+                    </code>
+                  </td>
+                  <td className="py-3 px-3 text-[#6b5a4d] max-w-xs leading-relaxed">
+                    {p.descripcion}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* 🚀 CENTRO DE MIGRACIÓN A PRODUCCIÓN: DATOS OFICIALES VS FICTICIOS */}
+      <div className="bg-white rounded-3xl border-2 border-[#bd5c3f]/30 shadow-xs p-6 sm:p-8 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-[#e8e2d5]">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#f3ddd2] text-[#bd5c3f] text-xs font-bold mb-1 border border-[#bd5c3f]/40 font-mono-space">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Transición a Datos Reales IBC</span>
+            </div>
+            <h3 className="font-serif-fraunces text-lg sm:text-xl font-bold text-[#332921]">
+              Centro de Migración: Poner Base de Datos en Blanco & Cargar Datos Oficiales
+            </h3>
+            <p className="text-xs text-[#6b5a4d] max-w-3xl leading-relaxed">
+              Actualmente el sistema cuenta con registros de prueba (40 hermanos, solicitudes demo de consejería y donaciones simuladas) para que puedas probar todas las vistas. Cuando tengas listos los datos oficiales de tu congregación, puedes <b>limpiar la base de datos en blanco con 1 solo clic</b> o pasarme los datos por el chat para cargarlos de inmediato.
+            </p>
+          </div>
+        </div>
+
+        {/* 2 Opciones de Carga Cero Fricción */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div className="p-4 rounded-2xl bg-[#faf8f1] border border-[#e8e2d5] space-y-2">
+            <h4 className="font-bold text-xs text-[#332921] font-serif-fraunces flex items-center gap-1.5">
+              <span>Opción A: Por el Chat de Asistencia (Cero Fricción)</span>
+            </h4>
+            <p className="text-xs text-[#6b5a4d] leading-relaxed">
+              Simplemente pégame aquí en el chat la lista de tus pastores, consolidadores, discipuladores y miembros (en texto, tabla o lista de Excel). Yo ejecutaré el script de reemplazo en 10 segundos y la base de datos quedará oficial y sincronizada sin que toques ningún archivo.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-[#faf8f1] border border-[#e8e2d5] space-y-2">
+            <h4 className="font-bold text-xs text-[#332921] font-serif-fraunces flex items-center gap-1.5">
+              <span>Opción B: Poner en Blanco y Cargar Manualmente</span>
+            </h4>
+            <p className="text-xs text-[#6b5a4d] leading-relaxed">
+              Usa el botón de abajo para dejar la base de datos con 0 miembros, 0 consejerías y 0 ofrendas. Desde allí, el equipo puede empezar a registrar personas con el botón <b>«+ Nuevo Miembro»</b> y mediante el formulario público de visitas.
+            </p>
+          </div>
+        </div>
+
+        {/* Botones de Acción */}
+        <div className="flex flex-wrap items-center gap-3 pt-3">
+          <button
+            type="button"
+            onClick={() => setShowWipeModal(true)}
+            className="px-5 py-2.5 rounded-xl bg-[#bd5c3f] hover:bg-[#a54b30] text-white text-xs font-bold flex items-center gap-2 transition-all shadow-md shadow-[#bd5c3f]/25 cursor-pointer"
+          >
+            <Trash2 className="w-4 h-4" />
+            <span>🧹 Poner Base de Datos en Blanco (Limpiar Ficticios)</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowImportModal(true)}
+            className="px-4 py-2.5 rounded-xl bg-[#46543c] hover:bg-[#38432f] text-white text-xs font-bold flex items-center gap-2 transition-colors cursor-pointer"
+          >
+            <Upload className="w-4 h-4" />
+            <span>📋 Cargar / Pegar Datos Oficiales (JSON)</span>
+          </button>
+
           <button
             type="button"
             onClick={handleExportData}
-            className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center gap-2 transition-colors shadow-xs"
+            className="px-4 py-2.5 rounded-xl bg-[#283322] hover:bg-[#35432d] text-white text-xs font-bold flex items-center gap-2 transition-colors cursor-pointer"
           >
             <Download className="w-4 h-4" />
-            <span>Descargar Copia de Seguridad (JSON)</span>
+            <span>Descargar Copia de Seguridad Actual (JSON)</span>
           </button>
 
           <button
             type="button"
             onClick={() => {
-              if (window.confirm('¿Seguro que deseas restablecer todos los datos a la semilla inicial de IBC Bogotá?')) {
-                resetToDefaults();
-              }
+              resetToDefaults();
             }}
-            className="px-4 py-2 rounded-xl border border-rose-200 text-rose-700 hover:bg-rose-50 text-xs font-bold flex items-center gap-2 transition-colors"
+            className="px-4 py-2.5 rounded-xl border border-[#e8e2d5] hover:bg-[#f4efe4] text-[#6b5a4d] text-xs font-bold flex items-center gap-2 transition-colors cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" />
-            <span>Restablecer Datos de Demostración</span>
+            <span>Restablecer Semilla Demo</span>
           </button>
         </div>
       </div>
+
+      {/* Modal de Confirmación para Limpiar Base de Datos */}
+      {showWipeModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 text-[#332921]">
+            <div className="flex items-center gap-3 text-[#bd5c3f]">
+              <div className="w-10 h-10 rounded-2xl bg-[#f3ddd2] flex items-center justify-center font-bold">
+                <AlertTriangle className="w-5 h-5 text-[#bd5c3f]" />
+              </div>
+              <div>
+                <h3 className="font-serif-fraunces text-base font-bold text-[#332921]">
+                  Poner Base de Datos en Blanco
+                </h3>
+                <p className="text-[11px] text-[#6b5a4d]">Confirmación de limpieza para datos reales</p>
+              </div>
+            </div>
+
+            <p className="text-xs text-[#6b5a4d] leading-relaxed">
+              Esta acción <b>eliminará todos los 40 miembros de prueba</b>, solicitudes de consejería simuladas y ofrendas demo. El sistema quedará en blanco con 0 miembros, listo para que cargues los datos oficiales de IBC Bogotá.
+            </p>
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowWipeModal(false)}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-[#6b5a4d] hover:bg-[#f4efe4] cursor-pointer"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  clearAllDataForProduction();
+                  setShowWipeModal(false);
+                }}
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-[#bd5c3f] text-white hover:bg-[#a54b30] shadow-md cursor-pointer"
+              >
+                Sí, Poner en Blanco
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal para Pegar o Importar JSON de Datos Oficiales */}
+      {showImportModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 text-[#332921]">
+            <div className="flex items-center justify-between border-b border-[#e8e2d5] pb-3">
+              <div className="flex items-center gap-2">
+                <Upload className="w-5 h-5 text-[#46543c]" />
+                <h3 className="font-serif-fraunces text-base font-bold text-[#332921]">
+                  Importar Lote de Datos Oficiales (JSON)
+                </h3>
+              </div>
+              <button
+                onClick={() => setShowImportModal(false)}
+                className="text-[#6b5a4d] hover:text-[#332921] font-bold p-1 cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="text-xs text-[#6b5a4d] leading-relaxed">
+              Pega aquí el contenido JSON con la estructura oficial de miembros (<code>members</code>), consejerías o donaciones:
+            </p>
+
+            <textarea
+              rows={8}
+              value={pastedJsonText}
+              onChange={(e) => setPastedJsonText(e.target.value)}
+              placeholder={`{\n  "members": [\n    {\n      "id": "mem-001",\n      "nombre": "Nombre Apellido",\n      "telefono": "573001234567",\n      "email": "correo@ejemplo.com",\n      "tipo": "Visitante Nuevo",\n      "estadoSeguimiento": "Nuevo"\n    }\n  ]\n}`}
+              className="w-full text-xs font-mono-space p-3 rounded-2xl border border-[#e8e2d5] bg-[#faf8f1] focus:outline-none focus:ring-2 focus:ring-[#46543c]/20"
+            />
+
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-[10px] text-[#6b5a4d]">
+                O envíame la lista por el chat y yo actualizo los archivos.
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowImportModal(false)}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-[#6b5a4d] hover:bg-[#f4efe4] cursor-pointer"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    try {
+                      const parsed = JSON.parse(pastedJsonText);
+                      importOfficialData(parsed);
+                      setShowImportModal(false);
+                      setPastedJsonText('');
+                    } catch (e) {
+                      showToast('error', 'El formato del texto pegado no es un JSON válido', 'Error de Importación');
+                    }
+                  }}
+                  className="px-4 py-2 rounded-xl text-xs font-bold bg-[#46543c] text-white hover:bg-[#38432f] shadow-md cursor-pointer"
+                >
+                  Importar y Activar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
