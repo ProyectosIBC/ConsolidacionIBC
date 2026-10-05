@@ -555,27 +555,27 @@ export const DashboardView: React.FC = () => {
      Sencilla, gráfica, letras grandes, teléfono gigante para llamada directa.
      ========================================================================= */
   return (
-    <div className="space-y-6 pb-12">
+    <div className="space-y-6 pb-12 font-sans-karla text-[#332921]">
       {/* Banner de Bienvenida Cálido y Sencillo */}
-      <div className="bg-slate-900 text-white p-6 sm:p-7 rounded-3xl border border-slate-800 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[#283322] text-[#f4efe4] p-6 sm:p-7 rounded-3xl border border-[#3e4c35] shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold text-2xl shadow-lg shrink-0">
+          <div className="w-14 h-14 rounded-2xl bg-[#46543c] text-white flex items-center justify-center font-bold text-2xl shadow-lg shrink-0 border border-[#a9bb9e]/30">
             🕊️
           </div>
           <div className="space-y-1">
             <div className="flex items-center gap-3 flex-wrap">
-              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-serif-fraunces font-bold text-white tracking-tight">
                 Bienvenido, Pastor Edgar
               </h2>
               <button
                 onClick={nextGreeting}
-                className="px-3 py-1.5 rounded-xl bg-blue-600/30 hover:bg-blue-600/50 text-blue-200 text-xs font-bold border border-blue-400/40 transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
+                className="px-3 py-1.5 rounded-xl bg-[#35432d] hover:bg-[#435339] text-[#d6decf] text-xs font-bold border border-[#a9bb9e]/30 transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
                 title="Cambiar reflexión pastoral institucional"
               >
                 <span>🔄 {currentGreeting.titulo} (Ver siguiente)</span>
               </button>
             </div>
-            <p className="text-xs sm:text-sm text-amber-200/95 italic font-serif leading-relaxed max-w-2xl bg-slate-800/80 p-3.5 rounded-2xl border border-slate-700/80 shadow-xs">
+            <p className="text-xs sm:text-sm text-[#f3ddd2] italic font-serif-fraunces leading-relaxed max-w-2xl bg-[#20271a]/80 p-3.5 rounded-2xl border border-[#3e4c35] shadow-xs">
               {currentGreeting.mensaje}
             </p>
             <p className="text-xs text-slate-300 font-medium">
@@ -586,14 +586,14 @@ export const DashboardView: React.FC = () => {
 
         {/* 🌟 Modo Enfoque Pastoral (Alerta de Acción Inmediata) */}
         {(consejeriasPendientes.length > 0 || nuevos7Dias.length > 0) && (
-          <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-slate-900 rounded-3xl p-5 text-white shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="bg-gradient-to-r from-[#46543c] via-[#35432d] to-[#283322] rounded-3xl p-5 text-white shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4 border border-[#4d5e42]">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0">
-                <Sparkles className="w-5 h-5 text-amber-300 animate-pulse" />
+              <div className="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center shrink-0 border border-white/20">
+                <Sparkles className="w-5 h-5 text-[#f3ddd2] animate-pulse" />
               </div>
               <div>
-                <h4 className="font-black text-sm text-white">Enfoque de Atención Prioritaria para Hoy</h4>
-                <p className="text-xs text-blue-100">
+                <h4 className="font-serif-fraunces font-bold text-sm text-white">Enfoque de Atención Prioritaria para Hoy</h4>
+                <p className="text-xs text-[#d6decf]">
                   Hay {consejeriasPendientes.filter(c => c.urgencia === 'Alta' || getTiempoAtencionStatus(c).status === 'breached').length} consejerías prioritarias y {nuevos7Dias.length} visitantes recientes esperando cuidado pastoral.
                 </p>
               </div>
@@ -601,21 +601,21 @@ export const DashboardView: React.FC = () => {
             <div className="flex items-center gap-2 shrink-0 flex-wrap">
               <button
                 onClick={() => setCurrentView('counseling-calendar')}
-                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-[#bd5c3f] hover:bg-[#a54b30] text-white font-bold text-xs transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer shadow-[#bd5c3f]/25"
               >
                 <CalendarCheck className="w-3.5 h-3.5" />
                 <span>Calendario Pastoral</span>
               </button>
               <button
                 onClick={() => setCurrentView('consolidators')}
-                className="px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs border border-white/30 transition-colors flex items-center gap-1.5 cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white font-bold text-xs border border-white/25 transition-colors flex items-center gap-1.5 cursor-pointer"
               >
                 <Users className="w-3.5 h-3.5" />
                 <span>Equipo Consolidadores</span>
               </button>
               <button
                 onClick={() => setCurrentView('counseling')}
-                className="px-4 py-2 rounded-xl bg-white text-blue-900 font-bold text-xs hover:bg-blue-50 transition-colors shadow-xs cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-[#faf8f1] text-[#332921] font-bold text-xs hover:bg-white transition-colors shadow-xs cursor-pointer border border-[#e8e2d5]"
               >
                 Atender ({consejeriasPendientes.length})
               </button>
@@ -625,24 +625,24 @@ export const DashboardView: React.FC = () => {
 
         {/* Botón Rápido para simular / probar otros perfiles */}
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-xs text-slate-400 font-bold">Probar como:</span>
+          <span className="text-xs text-[#6b5a4d] font-bold font-mono-space">Probar como:</span>
           <button
             onClick={() => setActiveProfile('cons-1')}
-            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 text-xs font-bold cursor-pointer transition-all"
+            className="px-3 py-1.5 rounded-xl bg-[#f4efe4] hover:bg-[#ede5d6] text-[#46543c] border border-[#e8e2d5] text-xs font-bold cursor-pointer transition-all"
             title="Probar vista de Martha Gómez"
           >
             Martha G.
           </button>
           <button
             onClick={() => setActiveProfile('cons-2')}
-            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-indigo-300 text-xs font-bold cursor-pointer transition-all"
+            className="px-3 py-1.5 rounded-xl bg-[#f4efe4] hover:bg-[#ede5d6] text-[#46543c] border border-[#e8e2d5] text-xs font-bold cursor-pointer transition-all"
             title="Probar vista de Andrés Pardo"
           >
             Andrés P.
           </button>
           <button
             onClick={() => setActiveProfile('cons-3')}
-            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-purple-300 text-xs font-bold cursor-pointer transition-all"
+            className="px-3 py-1.5 rounded-xl bg-[#f4efe4] hover:bg-[#ede5d6] text-[#46543c] border border-[#e8e2d5] text-xs font-bold cursor-pointer transition-all"
             title="Probar vista de Viviana Torres"
           >
             Viviana T.

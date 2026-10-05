@@ -174,22 +174,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
   const systemItems = allNavItems.filter((item) => item.visible && item.section === 'system');
 
   return (
-    <aside className="w-64 bg-slate-900 text-slate-200 flex flex-col shrink-0 min-h-screen border-r border-slate-800 select-none">
+    <aside className="w-64 bg-[#283322] text-[#f4efe4] flex flex-col shrink-0 min-h-screen border-r border-[#3e4c35] select-none shadow-xl">
       {/* Brand Header */}
-      <div className="p-5 border-b border-slate-800 flex items-center justify-between">
+      <div className="p-5 border-b border-[#3e4c35] flex items-center justify-between bg-[#232c1e]/60">
         <div className="flex items-center gap-3">
           <IBCLogo size="md" />
           <div>
-            <h1 className="font-bold text-white text-base tracking-tight leading-tight">
+            <h1 className="font-serif-fraunces font-bold text-white text-base tracking-tight leading-tight">
               IBC Bogotá
             </h1>
-            <p className="text-[11px] text-blue-300/90 font-medium italic">Donde el amor hace la diferencia</p>
+            <p className="text-[11px] text-[#a9bb9e] font-serif-fraunces italic">Donde el amor hace la diferencia</p>
           </div>
         </div>
         {onClose && (
           <button
             onClick={onClose}
-            className="lg:hidden text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 cursor-pointer"
+            className="lg:hidden text-[#a9bb9e] hover:text-white p-1 rounded-lg hover:bg-[#3e4c35] cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -197,15 +197,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
       </div>
 
       <div className="px-5 pt-3">
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-950/80 border border-indigo-700/50 text-[11px] text-indigo-300 font-medium">
-          <Sparkles className="w-3 h-3 text-indigo-400" />
-          <span>Capa Gratuita · Costo $0/mes</span>
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#35432d] border border-[#4d5e42] text-[11px] text-[#a9bb9e] font-medium font-mono-space">
+          <Sparkles className="w-3 h-3 text-[#f3ddd2]" />
+          <span>Capa Gratuita · $0 USD/mes</span>
         </div>
       </div>
 
       {/* Navigation Links */}
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-        <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+        <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-[#8e9f84] font-mono-space">
           Módulos Pastorales
         </div>
         {mainItems.map((item) => {
@@ -220,16 +220,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
               }}
               className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 isActive
-                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 font-bold'
-                  : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
+                  ? 'bg-[#bd5c3f] text-white shadow-md shadow-[#bd5c3f]/30 font-bold'
+                  : 'text-[#d6decf] hover:bg-[#35432d] hover:text-white'
               }`}
             >
               <div className="flex items-center gap-3">
-                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-[#a9bb9e]'}`} />
                 <span>{item.label}</span>
               </div>
               {item.badge && (
-                <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${item.badgeColor || 'bg-blue-500 text-white'}`}>
+                <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${item.badgeColor || 'bg-[#bd5c3f] text-white'}`}>
                   {item.badge}
                 </span>
               )}
@@ -237,7 +237,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
           );
         })}
 
-        <div className="pt-4 px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+        <div className="pt-4 px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-[#8e9f84] font-mono-space">
           Herramientas y Sistema
         </div>
         {systemItems.map((item) => {
@@ -252,12 +252,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
               }}
               className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 isActive
-                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 font-bold'
-                  : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
+                  ? 'bg-[#bd5c3f] text-white shadow-md shadow-[#bd5c3f]/30 font-bold'
+                  : 'text-[#d6decf] hover:bg-[#35432d] hover:text-white'
               }`}
             >
               <div className="flex items-center gap-3">
-                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-[#a9bb9e]'}`} />
                 <span>{item.label}</span>
               </div>
             </button>
@@ -266,30 +266,30 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
       </nav>
 
       {/* Footer User Info */}
-      <div className="p-4 border-t border-slate-800 bg-slate-950/40">
+      <div className="p-4 border-t border-[#3e4c35] bg-[#20271a]/70">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center text-indigo-300 font-bold text-sm shrink-0">
+          <div className="w-9 h-9 rounded-full bg-[#bd5c3f]/25 border border-[#bd5c3f]/40 flex items-center justify-center text-[#f3ddd2] font-serif-fraunces font-bold text-sm shrink-0">
             {activeUserProfile.nombre.charAt(0)}
           </div>
           <div className="min-w-0 flex-1">
-            <h4 className="text-xs font-bold text-white truncate">{activeUserProfile.nombre}</h4>
-            <p className="text-[11px] text-slate-400 truncate flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            <h4 className="text-xs font-bold text-white truncate font-serif-fraunces">{activeUserProfile.nombre}</h4>
+            <p className="text-[11px] text-[#a9bb9e] truncate flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#a9bb9e]"></span>
               {activeUserProfile.rolLabel}
             </p>
           </div>
         </div>
 
         {activeRole === 'desarrollador' && (
-          <div className="mt-2.5 px-2 py-1 rounded-md bg-amber-500/10 border border-amber-500/30 text-[10px] text-amber-300 font-mono flex items-center justify-between">
+          <div className="mt-2.5 px-2 py-1 rounded-md bg-amber-500/15 border border-amber-500/30 text-[10px] text-amber-200 font-mono-space flex items-center justify-between">
             <span>MODO DEVOPS ACTIVO</span>
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
           </div>
         )}
 
         {urgentCounselingCount > 0 && activeRole !== 'consolidador' && (
-          <div className="mt-2.5 p-2 rounded-lg bg-rose-950/60 border border-rose-800/60 flex items-center gap-2 text-rose-300 text-xs">
-            <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
+          <div className="mt-2.5 p-2 rounded-lg bg-[#bd5c3f]/20 border border-[#bd5c3f]/40 flex items-center gap-2 text-[#f3ddd2] text-xs">
+            <AlertTriangle className="w-4 h-4 text-[#f3ddd2] shrink-0" />
             <span className="truncate">{urgentCounselingCount} consejería(s) pendientes</span>
           </div>
         )}

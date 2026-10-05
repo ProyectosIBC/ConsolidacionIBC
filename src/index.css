@@ -1,53 +1,87 @@
 @import "tailwindcss";
 
-@layer base {
-  body {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background-color: #f8fafc;
-    color: #0f172a;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+:root {
+  --parchment: #faf8f1;
+  --parchment-warm: #f4efe4;
+  --parchment-card: #ffffff;
+  --ink: #332921;
+  --ink-muted: #6b5a4d;
+  --sage-deep: #46543c;
+  --sage-soft: #a9bb9e;
+  --sage-subtle: #edf3eb;
+  --clay: #bd5c3f;
+  --clay-hover: #a54b30;
+  --clay-pale: #f3ddd2;
+  --border-warm: #e8e2d5;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Karla', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--parchment);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Tipografías del Sistema Editorial */
+.font-serif-fraunces {
+  font-family: 'Fraunces', Georgia, serif;
+  font-optical-sizing: auto;
 }
 
 .font-serif-title {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Fraunces', Georgia, serif;
+  font-optical-sizing: auto;
 }
 
-/* Custom scrollbar */
+.font-sans-karla {
+  font-family: 'Karla', sans-serif;
+}
+
+.font-mono-space {
+  font-family: 'Space Mono', monospace;
+}
+
+/* Scrollbar cálido y pastoral */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #f4efe4;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.35);
+  background: #a9bb9e;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.55);
+  background: #46543c;
 }
 
 /* Glassmorphism & Tactile Surfaces */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(250, 248, 241, 0.88);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
+  border: 1px solid rgba(232, 226, 213, 0.9);
+  box-shadow: 0 4px 20px -2px rgba(51, 41, 33, 0.04);
 }
 
 .card-tactile {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.02), 0 1px 2px -1px rgba(15, 23, 42, 0.02);
+  border: 1px solid #e8e2d5;
+  box-shadow: 0 1px 3px 0 rgba(51, 41, 33, 0.03), 0 1px 2px -1px rgba(51, 41, 33, 0.02);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-tactile:hover {
-  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
-  border-color: #cbd5e1;
+  box-shadow: 0 10px 25px -5px rgba(70, 84, 60, 0.08), 0 8px 10px -6px rgba(70, 84, 60, 0.04);
+  border-color: #a9bb9e;
   transform: translateY(-1px);
 }
+

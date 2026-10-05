@@ -141,21 +141,21 @@ export const Header: React.FC<HeaderProps> = ({
   const current = getHeaderInfo();
 
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-30 px-4 sm:px-6 py-3.5">
+    <header className="bg-[#faf8f1] border-b border-[#e8e2d5] sticky top-0 z-30 px-4 sm:px-6 py-3.5 shadow-2xs">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         {/* Title & Subtitle */}
         <div className="flex items-center gap-3">
           <button
             onClick={onToggleMobileMenu}
-            className="lg:hidden p-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer"
+            className="lg:hidden p-2 rounded-xl bg-[#f4efe4] text-[#46543c] hover:bg-[#ede5d6] cursor-pointer"
             title="Abrir menú de navegación"
           >
             <Menu className="w-5 h-5" />
           </button>
           <IBCLogo size="sm" className="lg:hidden" />
           <div>
-            <h2 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">{current.title}</h2>
-            <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{current.subtitle}</p>
+            <h2 className="font-serif-fraunces text-base sm:text-lg font-bold text-[#332921] tracking-tight">{current.title}</h2>
+            <p className="text-xs text-[#6b5a4d] mt-0.5 line-clamp-1">{current.subtitle}</p>
           </div>
         </div>
 
@@ -164,15 +164,15 @@ export const Header: React.FC<HeaderProps> = ({
           {/* PERFIL AISLADO DE SESIÓN (IDENTIDAD AUTENTICADA BLOQUEADA) */}
           {activeRole === 'desarrollador' ? (
             /* El perfil Desarrollador cuenta con selector para pruebas técnicas DevOps */
-            <div className="flex items-center gap-1.5 bg-amber-50/80 border border-amber-200 p-1 rounded-xl shadow-2xs">
-              <div className="hidden sm:flex items-center gap-1.5 px-2 text-[11px] font-bold text-amber-800">
-                <Code2 className="w-3.5 h-3.5 text-amber-600" />
+            <div className="flex items-center gap-1.5 bg-[#f4efe4] border border-[#e8e2d5] p-1 rounded-xl shadow-2xs">
+              <div className="hidden sm:flex items-center gap-1.5 px-2 text-[11px] font-bold text-[#46543c] font-mono-space">
+                <Code2 className="w-3.5 h-3.5 text-[#bd5c3f]" />
                 <span>Simular Rol:</span>
               </div>
               <select
                 value={activeProfile}
                 onChange={(e) => setActiveProfile(e.target.value)}
-                className="text-xs font-bold py-1 px-2.5 rounded-lg bg-white border border-amber-200 text-amber-900 shadow-2xs focus:outline-none cursor-pointer max-w-[180px] sm:max-w-none"
+                className="text-xs font-bold py-1 px-2.5 rounded-lg bg-white border border-[#e8e2d5] text-[#332921] shadow-2xs focus:outline-none cursor-pointer max-w-[180px] sm:max-w-none"
               >
                 <optgroup label="🕊️ Liderazgo Pastoral">
                   <option value="pastor">Pastor Edgar Castaño (Pastor Principal)</option>
@@ -191,14 +191,14 @@ export const Header: React.FC<HeaderProps> = ({
             /* Para Pastor y Consolidadores: PERFIL ESTRICTAMENTE AISLADO A SU CUENTA */
             <button
               onClick={() => setCurrentView('consolidators')}
-              className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl shadow-2xs transition-colors cursor-pointer"
+              className="flex items-center gap-2 px-3 py-1.5 bg-[#f4efe4] hover:bg-[#ede5d6] border border-[#e8e2d5] rounded-xl shadow-2xs transition-colors cursor-pointer"
               title="Ver perfiles y equipo de consolidadores"
             >
               <div
                 className={`w-6 h-6 rounded-lg flex items-center justify-center text-xs font-bold shrink-0 ${
                   activeRole === 'pastor'
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'bg-emerald-100 text-emerald-700'
+                    ? 'bg-[#46543c] text-white'
+                    : 'bg-[#a9bb9e] text-[#283322]'
                 }`}
               >
                 {activeRole === 'pastor' ? (
@@ -208,10 +208,10 @@ export const Header: React.FC<HeaderProps> = ({
                 )}
               </div>
               <div className="flex flex-col text-left">
-                <span className="text-xs font-extrabold text-slate-800 leading-tight">
+                <span className="text-xs font-extrabold text-[#332921] leading-tight font-serif-fraunces">
                   {activeUserProfile.nombre}
                 </span>
-                <span className="text-[10px] text-slate-500 font-semibold leading-tight">
+                <span className="text-[10px] text-[#6b5a4d] font-semibold leading-tight">
                   {activeUserProfile.rolLabel} • Ver Perfiles
                 </span>
               </div>
@@ -221,13 +221,13 @@ export const Header: React.FC<HeaderProps> = ({
           {/* BOTÓN DE NOTIFICACIONES Y MENSAJES PARA CADA PERFIL */}
           <button
             onClick={() => setIsNotificationsOpen(true)}
-            className="relative px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs"
+            className="relative px-3 py-1.5 rounded-xl bg-[#f4efe4] hover:bg-[#ede5d6] border border-[#e8e2d5] text-[#332921] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs"
             title="Abrir buzón de notificaciones y mensajes del perfil"
           >
-            <Bell className="w-3.5 h-3.5 text-blue-600" />
+            <Bell className="w-3.5 h-3.5 text-[#bd5c3f]" />
             <span className="hidden sm:inline">Notificaciones</span>
             {unreadCount > 0 && (
-              <span className="px-1.5 py-0.5 rounded-full bg-rose-600 text-white font-black text-[10px] leading-none animate-pulse">
+              <span className="px-1.5 py-0.5 rounded-full bg-[#bd5c3f] text-white font-black text-[10px] leading-none animate-pulse">
                 {unreadCount}
               </span>
             )}
@@ -236,12 +236,12 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Telegram Status indicator (Solo Pastor y Desarrollador) */}
           {(activeRole === 'pastor' || activeRole === 'desarrollador') && (
             <div
-              onClick={() => setCurrentView('settings')}
-              className="cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 border border-sky-200 text-xs font-medium text-sky-700 transition-colors"
-              title="Bot de Telegram conectado"
+              onClick={() => setCurrentView('alerts-config')}
+              className="cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#edf3eb] hover:bg-[#dfecdd] border border-[#a9bb9e]/60 text-xs font-medium text-[#46543c] transition-colors"
+              title="Canal de Telegram"
             >
-              <Bot className="w-3.5 h-3.5 text-sky-600" />
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <Bot className="w-3.5 h-3.5 text-[#46543c]" />
+              <span className="w-2 h-2 rounded-full bg-[#46543c] animate-pulse"></span>
             </div>
           )}
 
@@ -249,7 +249,7 @@ export const Header: React.FC<HeaderProps> = ({
           {currentView === 'kanban' && (
             <button
               onClick={onOpenNewMemberModal}
-              className="px-3.5 py-1.5 rounded-xl bg-blue-600 text-white hover:bg-blue-700 text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
+              className="px-3.5 py-1.5 rounded-xl bg-[#bd5c3f] text-white hover:bg-[#a54b30] text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all cursor-pointer shadow-[#bd5c3f]/20"
             >
               <Plus className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Nuevo Miembro</span>
@@ -259,7 +259,7 @@ export const Header: React.FC<HeaderProps> = ({
           {currentView === 'counseling' && (
             <button
               onClick={onOpenNewCounselingModal}
-              className="px-3.5 py-1.5 rounded-xl bg-rose-600 text-white hover:bg-rose-700 text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
+              className="px-3.5 py-1.5 rounded-xl bg-[#bd5c3f] text-white hover:bg-[#a54b30] text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all cursor-pointer shadow-[#bd5c3f]/20"
             >
               <Plus className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Nueva Consejería</span>
@@ -269,7 +269,7 @@ export const Header: React.FC<HeaderProps> = ({
           {currentView === 'donations' && (
             <button
               onClick={onOpenNewDonationModal}
-              className="px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
+              className="px-3.5 py-1.5 rounded-xl bg-[#46543c] text-white hover:bg-[#35402e] text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all cursor-pointer shadow-[#46543c]/20"
             >
               <Plus className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Registrar Ofrenda</span>
@@ -279,7 +279,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Logout button */}
           <button
             onClick={logout}
-            className="p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-rose-50 hover:text-rose-600 transition-colors cursor-pointer"
+            className="p-2 rounded-xl bg-[#f4efe4] text-[#6b5a4d] hover:bg-[#f3ddd2] hover:text-[#bd5c3f] transition-colors cursor-pointer"
             title="Cerrar sesión"
           >
             <LogOut className="w-4 h-4" />
